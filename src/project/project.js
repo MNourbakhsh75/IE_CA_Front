@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import '../style/project.scss'
-import header from './../common/header'
+import Header from '../common/Header'
 class project extends Component {
     render(){
         return(
-            <div>
-                <header/>
-                dd
+            <div className="project">
+                <Header/>
             </div>
         );
     }
