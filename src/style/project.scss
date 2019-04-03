@@ -1,0 +1,12 @@
+@import "../assets/fonts/iransans-fonts/fonts.scss";
+
+.project {
+    font-family: IRANSans;
+    margin: 0;
+    direction: rtl;
+    .nav {
+        background-color: gray;
+        font-family: IRANSans;
+        direction: rtl;
+    }
+}
