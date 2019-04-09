@@ -126,7 +126,9 @@ class project extends Component {
             <div className="project">
                 <Header/>
                 <TopBar/>
+                {/* <div className="kha"> */}
                 <ProjectContainer/>
+                {/* </div> */}
                 <Footer/>
             </div>
         );
