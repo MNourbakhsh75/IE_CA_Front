@@ -12,7 +12,7 @@
 
         .blueLine {
             background-color: #B9EEF2;
-            height: 300px;
+            height: 285px;
             .row{
                 margin: 0;
             }
@@ -20,9 +20,65 @@
                 font-size: 50px;
                 font-weight: bold;
                 color: #00848c;
-                margin-right: 210px;
                 padding-top: 20px;
+                position: relative;
+                right: 15%;
             }
+            .home-title-desc{
+                // margin-right: 210px;
+                padding-top: 15px;
+                direction: rtl;
+                position: relative;
+                right: 15%;
+                margin-left: 20%;
+            }
+            .search-form{
+                margin-top: 40px;
+                .form-row {
+                    position: relative;
+                    right: 24%;
+                    .input-group{
+                        width: 50%;
+                        height: 55px;
+                        background-color: #d7f8fa;
+                        border-bottom: 3px solid #00aebf;
+                        input:focus{
+                            box-shadow: none;
+                        }
+                        input {
+                            background-color: #d7f8fa;
+                            color: #6badaf;
+                            border-radius: 0;
+                            height: 100%;
+                            border: none;
+                        }
+                        .input-group-append{
+                            padding-left: 7px;
+                            padding-top: 5px;
+                            padding-bottom: 3px;
+                            .search-button {
+                                border-radius: 0;
+                                height: 95%;
+                                background-color: #00aebf;
+                                border: none;
+                            }
+                            .search-button::focus{
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // .search-input{
+            //         position: relative;
+            //         padding-top: 50px;
+            //         border-bottom: 1px solid blue;
+            //     input{
+            //         width: 40%;
+            //         // height: 50px;
+            //     }
+            // }
         }
     }
 }
