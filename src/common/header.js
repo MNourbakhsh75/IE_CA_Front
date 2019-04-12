@@ -12,7 +12,7 @@ class Header extends Component {
     render(){
         return(
             <Navbar className="navbar" expand="md" sticky="top">
-                <Navbar.Brand className="logo" href="#home"><img alt="logo icon" src={logo}/></Navbar.Brand>
+                <Navbar.Brand className="logo" href="home"><img alt="logo icon" src={logo}/></Navbar.Brand>
                 <Nav className="nav">
                     <Nav.Link className="navObject account" href="#home">{message.account}</Nav.Link>
                     <Nav.Link className="navObject exit" href="#link">{message.exit}</Nav.Link>

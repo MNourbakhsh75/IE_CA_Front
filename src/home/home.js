@@ -125,11 +125,14 @@ class Home extends Component {
                 </div>
                 <div className="projects">
                     <ProjectCard/>
-                    {/* < ProjectCard/> */}
-                    {/* < ProjectCard/> */}
+                    < ProjectCard/>
+                    < ProjectCard/>
+                    < ProjectCard/>
+                    < ProjectCard/>
+                    < ProjectCard/>
                 </div>
             </div>
-            <Footer/>
+                <Footer/>
             </div>
         );
     }

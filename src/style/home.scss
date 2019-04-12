@@ -10,8 +10,9 @@
     direction: rtl;
 
     .content {
-        height: calc(100% - (60px + 65px));
-
+        // height: calc(100% - (60px + 65px));
+        margin-top: 60px;
+        min-height: 100%;
         .blueLine {
             background-color: #B9EEF2;
             height: 285px;
@@ -94,10 +95,11 @@
 
         .projects {
             width: 65%;
-            float: left;
-            left: 10%;
+            // float: left;
+            right: 25%;
             position: relative;
             height: calc(100% - (265px));
+            // height: 95%;
             margin-top: -20px;
 
             .project-card {
@@ -105,7 +107,8 @@
                     margin: 0;
                     height: 100%;
                 }
-
+                
+                margin-bottom: 15px;
                 direction: rtl;
                 width: 99%;
                 height: 55%;
@@ -135,7 +138,7 @@
                         margin-left: 0;
 
                         .title {
-                            font-size: 1.7vw;
+                            font-size: 1.5vw;
                             font-weight: bold;
                             text-align: right;
                         }
@@ -154,10 +157,10 @@
 
                     .project-desc {
                         margin-left: 30px;
-                        padding-top: 20px;
+                        padding-top: 40px;
                         direction: rtl;
-                        max-height: 35%;
-                        overflow: auto;
+                        height: 35%;
+                        // overflow: auto;
                     }
 
                     .budget {

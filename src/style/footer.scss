@@ -3,7 +3,7 @@
 .footer{
     height: 65px;
     width: 100%;
-    position: absolute;
+    position: relative;
     text-align: center;
     left: 0;
     bottom: 0;
@@ -11,6 +11,7 @@
     color: #878787;
     font-size: 13px;
     .text{
-        margin-top: 25px;
+        top: 35%;
+        position: relative;
     }
 }

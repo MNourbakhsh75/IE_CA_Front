@@ -9,7 +9,7 @@ class Footer extends Component{
     render(){
         return(
             <footer className="footer text-center">
-                <div className="container-fluid text">
+                <div className="text">
                     {message.copyRight}
                 </div>
             </footer>
