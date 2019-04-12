@@ -9,13 +9,14 @@ import {
     Row,
     Button,
     Col,
-    Image
+    Image,
 } from 'react-bootstrap'
 
 const vars = {
     title : 'جاب‌اونجا خوب است!',
     placeholder: 'جست‌وجو در جاب‌اونجا‌',
-    btn: 'جست‌وجو'
+    btn: 'جست‌وجو',
+    UserSearch: 'جست‌وجوی نام کاربر'
 }
 
 class Title extends Component{
@@ -50,6 +51,9 @@ class SkillNameBox extends Component{
 }
 
 class SearchBar extends Component{
+    handel = () => {
+        console.log('search')
+    }
     render(){
         return(
             <Form className="search-form">
@@ -61,7 +65,7 @@ class SearchBar extends Component{
                             aria-describedby="inputGroupAppend"
                         />
                         <InputGroup.Append>
-                            <Button className="search-button">{vars.btn}</Button>
+                            <Button className="search-button" onClick={this.handel}>{vars.btn}</Button>
                         </InputGroup.Append>
                     </InputGroup>
                 </Form.Row>
@@ -70,7 +74,43 @@ class SearchBar extends Component{
     }
 }
 
+
+class UserSearch extends Component{
+    render(){
+        return(
+            <Card className="user-search-card">
+                <Row className="user-search-row">
+                    <input type="text" value="" placeholder={vars.UserSearch}/>
+                </Row>
+            </Card>
+        );
+    }
+}
+
+class UsersCard extends Component {
+    render(){
+        return(
+            <Card className="user-card">
+                <Row className="user-card-row">
+                    <Col className="user-image" lg={4} md={4}>
+                        <Image src="https://images.chesscomfiles.com/uploads/v1/user/20102042.6349e34c.161x161o.72c98194bbfc.jpeg"/>
+                    </Col>
+                    <Col className="user-info" lg={8} md={8}>
+                        <Row className="user-name">
+                            فامیل دور
+                        </Row>
+                        <Row className="user-desc">
+                            کلاه قرمزی 97
+                        </Row>
+                    </Col>
+                </Row>
+            </Card>
+        );
+    }
+}
+
 class ProjectCard extends Component{
+
     render(){
         return(
             <Card className="project-card">
@@ -93,7 +133,7 @@ class ProjectCard extends Component{
                         </Col>
                     </Row>
                     <Row className="project-desc">
-                        یک فروشگاه اینرنتی با قابلیت مدیریت حرفه ای سبد خرید حرفه ای مقایسه محصولات ارسال پیامک و ایمیل گزارش گیری جامع قالب...
+                    تیم گیک لب(آزمایشگاه گیک) قصد دارد یک پروژه نظارتی امنیتی را برونسپاری کند.این پروژه شامل بخش های مختلفی است که نیاز به تخصص های ذکر شده داردما به دوستانی برنامه نویس هستند نیاز داریم نه کسانی که کد نویس هستند.قطعا برنامه نویس واقعی مفهوم این جمله را درک می کند کد ها باید تماما بر اساس استاندارد های ارائه شده نوشته شوند توضیحات بیشتر قابل ارائه در این بخش نیست.
                     </Row>
                     <Row className="budget">
                         بودجه: ۲۵۰۰۰۰۰ تومان
@@ -104,6 +144,12 @@ class ProjectCard extends Component{
                         < SkillNameBox/>
                         < SkillNameBox/>
                         < SkillNameBox/>
+                        {/* < SkillNameBox/>
+                        < SkillNameBox/>
+                        < SkillNameBox/>
+                        < SkillNameBox/>
+                        < SkillNameBox/> */}
+
                     </Row>
                     </Col>
                 </Row>
@@ -127,9 +173,16 @@ class Home extends Component {
                     <ProjectCard/>
                     < ProjectCard/>
                     < ProjectCard/>
+                    {/* < ProjectCard/>
                     < ProjectCard/>
-                    < ProjectCard/>
-                    < ProjectCard/>
+                    < ProjectCard/> */}
+                </div>
+                <div className="users">
+                    <UserSearch/>
+                    <UsersCard/>
+                    < UsersCard/>
+                    < UsersCard/>
+                    
                 </div>
             </div>
                 <Footer/>
