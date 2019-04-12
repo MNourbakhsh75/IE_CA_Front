@@ -4,10 +4,10 @@ import project from './project/project';
 import home from './home/home.js'
 const App = () => 
   <Router>
-    <div>
+    {/* <div> */}
       <Route exact path='/project' component={project}/>
       <Route exact path='/home' component={home}/>
-    </div>
+    {/* </div> */}
   </Router>
 
 
