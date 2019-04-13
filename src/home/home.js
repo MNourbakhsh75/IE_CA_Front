@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import '../style/home.scss'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
+import * as Req from '../common/Req'
+import SpinLoader from '../common/SpinLoader'
+// import moment from 'moment'
 import {
     Card,
     Form,
@@ -11,7 +14,7 @@ import {
     Col,
     Image,
 } from 'react-bootstrap'
-
+import { PersianNumber } from '@thg303/react-persian';
 const vars = {
     title : 'جاب‌اونجا خوب است!',
     placeholder: 'جست‌وجو در جاب‌اونجا‌',
@@ -41,10 +44,16 @@ class TitleDesc extends Component{
 }
 
 class SkillNameBox extends Component{
+    constructor(props){
+        super(props);
+
+        // console.log(props)
+        this.state = {skillName : ''}
+    }
     render(){
         return(
             <div className="skill-box-name">
-                HTML
+                {this.props.skillName}
             </div>
         );
     }
@@ -52,7 +61,7 @@ class SkillNameBox extends Component{
 
 class SearchBar extends Component{
     handel = () => {
-        console.log('search')
+        console.log(`kha!`)
     }
     render(){
         return(
@@ -76,11 +85,19 @@ class SearchBar extends Component{
 
 
 class UserSearch extends Component{
+    constructor(props) {
+    super(props);
+
+    this.state = {value: ''};
+    }
+    handelChange = (event) => {
+        console.log(event.target.value)
+    }
     render(){
         return(
             <Card className="user-search-card">
                 <Row className="user-search-row">
-                    <input type="text" value="" placeholder={vars.UserSearch}/>
+                    <input type="text"  placeholder={vars.UserSearch} onChange={this.handelChange}/>
                 </Row>
             </Card>
         );
@@ -110,21 +127,37 @@ class UsersCard extends Component {
 }
 
 class ProjectCard extends Component{
+    constructor(props){
+        super(props)
 
-    render(){
+        this.state = {
+            project:{},
+            isLoad : false
+        }
+    }
+    componentWillMount = ()=>{
+        this.setState({project: this.props.project,isLoad:true})
+        // console.log(this.state)
+    }
+    
+    render (){
+        console.log(this.state)
+        // var a = moment(this.props.project.deadline);
+        var a = new Date(this.props.project.deadline);
+        // var formatted = t.format("dd.mm.yyyy hh:MM:ss");
+        console.log(a)
+        console.log(a.getDate(),a.getMonth(),a.getHours())
+        const budget = this.state.project.budget.toString()
         return(
             <Card className="project-card">
                 <Row className="main-row">
                     <Col lg={3} md={5} xs={6} className="image-col">
-                    <Image src="https://cdn4.vectorstock.com/i/1000x1000/31/48/software-developer-and-programmer-vector-10673148.jpg"/>
+                    <Image src={this.state.project.imageUrl}/>
                     </Col>
                     <Col lg={9} md={7} xs={6} className="info-col">
                     <Row className="title-time">
                         <Col lg={7} md={7} className="title">
-                            طراحی سایت دیجی کالا
-                            طراحی سایت دیجی کالا
-                            طراحی سایت دیجی کالا
-
+                            {this.state.project.title}
                         </Col>
                         <Col lg={4} md={5} className="time">
                             <span>
@@ -133,23 +166,18 @@ class ProjectCard extends Component{
                         </Col>
                     </Row>
                     <Row className="project-desc">
-                    تیم گیک لب(آزمایشگاه گیک) قصد دارد یک پروژه نظارتی امنیتی را برونسپاری کند.این پروژه شامل بخش های مختلفی است که نیاز به تخصص های ذکر شده داردما به دوستانی برنامه نویس هستند نیاز داریم نه کسانی که کد نویس هستند.قطعا برنامه نویس واقعی مفهوم این جمله را درک می کند کد ها باید تماما بر اساس استاندارد های ارائه شده نوشته شوند توضیحات بیشتر قابل ارائه در این بخش نیست.
+                        {this.state.project.description}
                     </Row>
                     <Row className="budget">
-                        بودجه: ۲۵۰۰۰۰۰ تومان
+                        بودجه: <PersianNumber>{budget}</PersianNumber> تومان
                     </Row>
                     <Row className="skills">
                         <div className="skill-label">مهارت‌ها: </div>
-                        <SkillNameBox/>
-                        < SkillNameBox/>
-                        < SkillNameBox/>
-                        < SkillNameBox/>
-                        {/* < SkillNameBox/>
-                        < SkillNameBox/>
-                        < SkillNameBox/>
-                        < SkillNameBox/>
-                        < SkillNameBox/> */}
-
+                        <SkillNameBox skillName="html"/>
+                        <SkillNameBox skillName = "css"/>
+                        <SkillNameBox skillName = "node"/>
+                        <SkillNameBox skillName = "java"/>
+                        
                     </Row>
                     </Col>
                 </Row>
@@ -159,7 +187,26 @@ class ProjectCard extends Component{
 }
 
 class Home extends Component {
+    constructor(){
+        super()
+
+        this.state = {
+        isLoad : false,
+        project: {}
+        }
+    }
+    componentDidMount = () =>{
+        Req.GetRequest('http://142.93.134.194:8000/joboonja/project').then((res) => {
+            this.setState({
+                project: res[0],
+                isLoad : true
+            })
+            // console.log(`second`, this.state)
+        })
+    }
     render(){
+        if (this.state.isLoad){
+            console.log(this.state)
         return(
             <div className="home">
             <Header/>
@@ -170,9 +217,9 @@ class Home extends Component {
                     <SearchBar/>
                 </div>
                 <div className="projects">
-                    <ProjectCard/>
-                    < ProjectCard/>
-                    < ProjectCard/>
+                    <ProjectCard project={this.state.project}/>
+                    {/* < ProjectCard/>
+                    < ProjectCard/> */}
                     {/* < ProjectCard/>
                     < ProjectCard/>
                     < ProjectCard/> */}
@@ -188,6 +235,11 @@ class Home extends Component {
                 <Footer/>
             </div>
         );
+        }else{
+            return(
+                <SpinLoader/>
+            );
+        }
     }
 }
 
