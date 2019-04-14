@@ -24,5 +24,9 @@ export const getReq = async (url) =>{
                 })
                 .catch(err => reject(err));
         });
-    }).catch((err)=>console.log(err));
+    }).catch(
+        (err)=>{console.log(`ee`,err)
+        return false
+        }
+        );
 }

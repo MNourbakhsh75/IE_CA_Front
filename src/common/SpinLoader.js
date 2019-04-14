@@ -4,7 +4,7 @@ import Loader from 'react-loader-spinner'
 class SpinLoader extends Component {
     render(){
         return(
-            <div className="loader" style={{position: "absolute",top : "35%",left: "40%"}}>
+            <div className="loader" style={{position: "absolute",margin: "0 auto",top : "35%",left: "45%"}}>
                 < Loader type = "Triangle"
                 color = "#00BFFF"
                 height = "200"

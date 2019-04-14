@@ -4,7 +4,8 @@ import Header from '../common/Header'
 import Footer from '../common/Footer'
 import * as Req from '../common/Request'
 import SpinLoader from '../common/SpinLoader'
-// import moment from 'moment'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import {
     Card,
     Form,
@@ -21,7 +22,10 @@ const vars = {
     btn: 'جست‌وجو',
     UserSearch: 'جست‌وجوی نام کاربر'
 }
-
+const urls = {
+    projects : 'http://localhost:8084/joboonja/project',
+    users : 'http://localhost:8084/joboonja/user'
+}
 class Title extends Component{
     render(){
         return(
@@ -108,19 +112,33 @@ class UserSearch extends Component{
 }
 
 class UsersCard extends Component {
+    constructor(props){
+        super(props)
+
+        this.state = {user: {}}
+    }
+    componentWillMount = () => {
+        this.setState({
+            user: this.props.user
+        })
+    }
     render(){
+        console.log(this.state)
+        const fullName = this.state.user.firstName+ ' ' + this.state.user.lastName
         return(
             <Card className="user-card">
                 <Row className="user-card-row">
                     <Col className="user-image" lg={4} md={4}>
-                        <Image src="https://images.chesscomfiles.com/uploads/v1/user/20102042.6349e34c.161x161o.72c98194bbfc.jpeg"/>
+                        <Image src={this.state.user.profilePictureURL}/>
                     </Col>
                     <Col className="user-info" lg={8} md={8}>
                         <Row className="user-name">
-                            فامیل دور
+                            {fullName}
                         </Row>
                         <Row className="user-desc">
-                            کلاه قرمزی 97
+                            {
+                                this.state.user.jobTitle
+                            }
                         </Row>
                     </Col>
                 </Row>
@@ -137,6 +155,10 @@ class RemainTime extends Component{
     componentWillMount = () => {
         this.setState({time : this.props.time})
     }
+    // componentDidUpdate = () => {
+    //     this.setState({time : this.props.time})
+    // }
+
     render(){
         return(
             <span className="remain-time">
@@ -161,11 +183,12 @@ class ProjectCard extends Component{
 
         this.state = {
             project:{},
-            isLoad : false
+            deadLineComponent: '',
+            deadLineTime:''
         }
     }
     componentWillMount = ()=>{
-        this.setState({project: this.props.project,isLoad:true})
+        this.setState({project: this.props.project})
         // console.log(this.state)
     }
     cmpDate = (time) => {
@@ -175,7 +198,7 @@ class ProjectCard extends Component{
         }
         var deadlineTime = new Date(time)
         var currentTime = new Date(Math.floor(Date.now()));
-        console.log(deadlineTime)
+        // console.log(deadlineTime)
         var cmp = (deadlineTime-currentTime) / 1000
         if (cmp <= 0){
             res.exp = true
@@ -190,13 +213,23 @@ class ProjectCard extends Component{
         }
         return res
     }
-    getDateComp = (date) =>{
+    getDateComp = (time) =>{
+        var date = this.cmpDate(time)
+        // console.log(date.dif)
         if (date.exp){
             return <ExpireTime/>
         }else{
             return <RemainTime time={date.dif}/>
         }
     }
+    // componentDidMount = ()=>{
+    //     this.interval= setInterval(() => this.setState({
+    //         deadLineTime: this.cmpDate(this.state.project.deadline)
+    //     }), 60000)
+    // }
+    // componentWillUnmount() {
+    //     clearInterval(this.interval);
+    // }
     getSkillsComp = (skills) =>{
         // console.log(skills)
         var list = []
@@ -207,14 +240,13 @@ class ProjectCard extends Component{
         return list
     }
     render (){
-        console.log(this.state)
+        // console.log(this.state)
         //1556112461000
-        var date = this.cmpDate(this.state.project.deadline)
-        console.log(date)
-        const deadLineComponent = this.getDateComp(date)
+        // console.log(date)
+        var deadLineComponent = this.getDateComp(this.state.project.deadline)
         const budget = this.state.project.budget.toString()
         const skillList = this.getSkillsComp(this.state.project.skills)
-        console.log(skillList)
+        // console.log(skillList)
         return(
             <Card className="project-card">
             <a href="/project">
@@ -228,8 +260,6 @@ class ProjectCard extends Component{
                             {this.state.project.title}
                         </Col>
                         <Col lg={4} md={5} className="time">
-                            {/* <RemainTime time={date.dif}/> */}
-                            {/* <ExpireTime/> */}
                             {deadLineComponent}
                         </Col>
                     </Row>
@@ -252,21 +282,34 @@ class ProjectCard extends Component{
 }
 
 class Home extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
 
         this.state = {
-        isLoad : false,
-        project: []
+        isLoadP : false,
+        isLoadU : false,
+        project: [],
+        user: []
         }
     }
     componentDidMount = () =>{
-        Req.getReq('http://142.93.134.194:8000/joboonja/project').then((res) => {
+        Req.getReq(urls.projects).then((res) => {
             // console.log(`second`, res)
+            if(res !== false){
+                this.setState({
+                    project: res,
+                    isLoadP : true
+                })
+            }
+        })
+        Req.getReq(urls.users).then((res) => {
+            // console.log(`second`, res)
+            if(res !== false){
             this.setState({
-                project: res,
-                isLoad : true
+                user: res,
+                isLoadU: true
             })
+            }
         })
     }
     getProjectList = (projects)=>{
@@ -277,10 +320,20 @@ class Home extends Component {
         }
         return list
     }
+    getUsersList = (users) =>{
+        var list = []
+        for(var u in users){
+            const user = <UsersCard user={users[u]} key={u}/>
+            list.push(user)
+        }
+        return list
+    }
     render(){
-        if (this.state.isLoad){
+        toast.configure()
+        if (this.state.isLoadP && this.state.isLoadU){
             console.log(this.state)
             const projectsList = this.getProjectList(this.state.project)
+            const usersList = this.getUsersList(this.state.user)
         return(
             <div className="home">
             <Header/>
@@ -291,26 +344,25 @@ class Home extends Component {
                     <SearchBar/>
                 </div>
                 <div className="projects">
-                    {/* <ProjectCard project={this.state.project}/> */}
-                    {/* <ProjectCard project={this.state.project}/>
-                    <ProjectCard project={this.state.project}/>
-                    <ProjectCard project={this.state.project}/> */}
                     {projectsList}
                 </div>
                 <div className="users">
                     <UserSearch/>
-                    <UsersCard/>
-                    < UsersCard/>
-                    < UsersCard/>
-                    
+                    {usersList}    
                 </div>
             </div>
                 <Footer/>
             </div>
         );
         }else{
+            // const notify = () => toast("Wow so easy !");
             return(
-                <SpinLoader/>
+                // <div>
+                    <SpinLoader/>
+                //     {
+                //         toast("Wow so easy !")
+                //     }
+                // </div>
             );
         }
     }
