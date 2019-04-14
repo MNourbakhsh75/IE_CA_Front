@@ -48,12 +48,15 @@ class SkillNameBox extends Component{
         super(props);
 
         // console.log(props)
-        this.state = {skillName : ''}
+        this.state = {skillName : '',key: 0}
+    }
+    componentWillMount = () => {
+        this.setState({skillName : this.props.skillName})
     }
     render(){
         return(
             <div className="skill-box-name">
-                {this.props.skillName}
+                {this.state.skillName}
             </div>
         );
     }
@@ -195,7 +198,13 @@ class ProjectCard extends Component{
         }
     }
     getSkillsComp = (skills) =>{
-        console.log(skills)
+        // console.log(skills)
+        var list = []
+        for(var s in skills){
+            var comp = <SkillNameBox skillName={skills[s].name} key={s}/>
+            list.push(comp)
+        }
+        return list
     }
     render (){
         console.log(this.state)
@@ -204,10 +213,11 @@ class ProjectCard extends Component{
         console.log(date)
         const deadLineComponent = this.getDateComp(date)
         const budget = this.state.project.budget.toString()
-        this.getSkillsComp(this.state.project.skills)
+        const skillList = this.getSkillsComp(this.state.project.skills)
+        console.log(skillList)
         return(
-            <a href="/project">
             <Card className="project-card">
+            <a href="/project">
                 <Row className="main-row">
                     <Col lg={3} md={5} xs={6} className="image-col">
                     <Image src={this.state.project.imageUrl}/>
@@ -231,16 +241,12 @@ class ProjectCard extends Component{
                     </Row>
                     <Row className="skills">
                         <div className="skill-label">مهارت‌ها: </div>
-                        <SkillNameBox skillName="html"/>
-                        <SkillNameBox skillName = "css"/>
-                        <SkillNameBox skillName = "node"/>
-                        <SkillNameBox skillName = "java"/>
-                        
+                        {skillList}
                     </Row>
                     </Col>
                 </Row>
-            </Card>
             </a>
+            </Card>
         );
     }
 }
@@ -251,21 +257,30 @@ class Home extends Component {
 
         this.state = {
         isLoad : false,
-        project: {}
+        project: []
         }
     }
     componentDidMount = () =>{
         Req.getReq('http://142.93.134.194:8000/joboonja/project').then((res) => {
             // console.log(`second`, res)
             this.setState({
-                project: res[0],
+                project: res,
                 isLoad : true
             })
         })
     }
+    getProjectList = (projects)=>{
+        var list = []
+        for(var p in projects){
+            const project = <ProjectCard project={projects[p]} key={p}/>
+            list.push(project)
+        }
+        return list
+    }
     render(){
         if (this.state.isLoad){
             console.log(this.state)
+            const projectsList = this.getProjectList(this.state.project)
         return(
             <div className="home">
             <Header/>
@@ -276,12 +291,11 @@ class Home extends Component {
                     <SearchBar/>
                 </div>
                 <div className="projects">
+                    {/* <ProjectCard project={this.state.project}/> */}
+                    {/* <ProjectCard project={this.state.project}/>
                     <ProjectCard project={this.state.project}/>
-                    {/* < ProjectCard/>
-                    < ProjectCard/> */}
-                    {/* < ProjectCard/>
-                    < ProjectCard/>
-                    < ProjectCard/> */}
+                    <ProjectCard project={this.state.project}/> */}
+                    {projectsList}
                 </div>
                 <div className="users">
                     <UserSearch/>
