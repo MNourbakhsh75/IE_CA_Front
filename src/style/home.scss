@@ -106,7 +106,13 @@
             height: calc(100% - (265px + 65px));
             // height: 85%;
             margin-top: -20px;
-
+            a{
+                text-decoration: none;
+                color: inherit;
+            }
+            a:focus{
+                outline: none !important;
+            }
             .project-card {
                 .main-row {
                     margin: 0;
@@ -153,13 +159,22 @@
                         }
 
                         .time {
-                            span {
+                            .remain-time {
                                 font-size: 1.1vw;
                                 text-align: center;
                                 background-color: #f5f5f5;
                                 color: #767676;
                                 height: 50%;
                                 margin-left: 5px;
+                            }
+                            .expire-time{
+                                background-color: #3d8788;
+                                font-size: 1.1vw;
+                                text-align: center;
+                                color: #ffff;
+                                height: 50%;
+                                margin-left: 5px;
+                                border-radius: 10%;
                             }
                         }
                     }

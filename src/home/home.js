@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../style/home.scss'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
-import * as Req from '../common/Req'
+import * as Req from '../common/Request'
 import SpinLoader from '../common/SpinLoader'
 // import moment from 'moment'
 import {
@@ -125,7 +125,33 @@ class UsersCard extends Component {
         );
     }
 }
+class RemainTime extends Component{
+    constructor(props){
+        super(props)
 
+        this.state = {time : '17.25'}
+    }
+    componentWillMount = () => {
+        this.setState({time : this.props.time})
+    }
+    render(){
+        return(
+            <span className="remain-time">
+                زمان باقی مانده: <PersianNumber>{this.state.time}</PersianNumber>
+            </span>
+        );
+    }
+}
+
+class ExpireTime extends Component{
+    render(){
+        return(
+            <span className="expire-time">
+                مهلت تمام شده
+            </span>
+        );
+    }
+}
 class ProjectCard extends Component{
     constructor(props){
         super(props)
@@ -139,16 +165,48 @@ class ProjectCard extends Component{
         this.setState({project: this.props.project,isLoad:true})
         // console.log(this.state)
     }
-    
+    cmpDate = (time) => {
+        var res = {
+            exp : '',
+            dif : ''
+        }
+        var deadlineTime = new Date(time)
+        var currentTime = new Date(Math.floor(Date.now()));
+        console.log(deadlineTime)
+        var cmp = (deadlineTime-currentTime) / 1000
+        if (cmp <= 0){
+            res.exp = true
+            res.dif = ''
+        }else{
+            // var days = Math.floor(cmp / 86400);
+            var hours = Math.floor(cmp / 3600);
+            var minutes = Math.floor(cmp / 60) % 60;
+            // console.log(hours,minutes)
+            res.exp = false
+            res.dif = hours+':'+minutes
+        }
+        return res
+    }
+    getDateComp = (date) =>{
+        if (date.exp){
+            return <ExpireTime/>
+        }else{
+            return <RemainTime time={date.dif}/>
+        }
+    }
+    getSkillsComp = (skills) =>{
+        console.log(skills)
+    }
     render (){
         console.log(this.state)
-        // var a = moment(this.props.project.deadline);
-        var a = new Date(this.props.project.deadline);
-        // var formatted = t.format("dd.mm.yyyy hh:MM:ss");
-        console.log(a)
-        console.log(a.getDate(),a.getMonth(),a.getHours())
+        //1556112461000
+        var date = this.cmpDate(this.state.project.deadline)
+        console.log(date)
+        const deadLineComponent = this.getDateComp(date)
         const budget = this.state.project.budget.toString()
+        this.getSkillsComp(this.state.project.skills)
         return(
+            <a href="/project">
             <Card className="project-card">
                 <Row className="main-row">
                     <Col lg={3} md={5} xs={6} className="image-col">
@@ -160,16 +218,16 @@ class ProjectCard extends Component{
                             {this.state.project.title}
                         </Col>
                         <Col lg={4} md={5} className="time">
-                            <span>
-                            زمان باقی مانده: ۱۷:۲۵
-                            </span>
+                            {/* <RemainTime time={date.dif}/> */}
+                            {/* <ExpireTime/> */}
+                            {deadLineComponent}
                         </Col>
                     </Row>
                     <Row className="project-desc">
                         {this.state.project.description}
                     </Row>
                     <Row className="budget">
-                        بودجه: <PersianNumber>{budget}</PersianNumber> تومان
+                        بودجه:  <PersianNumber> {budget} </PersianNumber>   تومان 
                     </Row>
                     <Row className="skills">
                         <div className="skill-label">مهارت‌ها: </div>
@@ -182,6 +240,7 @@ class ProjectCard extends Component{
                     </Col>
                 </Row>
             </Card>
+            </a>
         );
     }
 }
@@ -196,12 +255,12 @@ class Home extends Component {
         }
     }
     componentDidMount = () =>{
-        Req.GetRequest('http://142.93.134.194:8000/joboonja/project').then((res) => {
+        Req.getReq('http://142.93.134.194:8000/joboonja/project').then((res) => {
+            // console.log(`second`, res)
             this.setState({
                 project: res[0],
                 isLoad : true
             })
-            // console.log(`second`, this.state)
         })
     }
     render(){
