@@ -74,6 +74,9 @@
                             .text-time{
                                 padding-right: 10px;
                             }
+                            &.expire{
+                                color :#ef001c
+                            }
                         }
 
                         .budget {
@@ -180,6 +183,7 @@
                         input:focus{
                             border: none !important;
                             box-shadow: none !important;
+                            outline: none !important;
                         }
 
                         .unit {
@@ -196,6 +200,22 @@
                         margin-right: 10px;
                         // height: 40px;
                         margin-top: 10px;
+                    }
+                }
+                .expire-bid{
+                    margin-top: 40px;
+                    margin-right: 30px;
+                    color: #ef001c;
+                    .flaticon-danger::before {
+                        margin-left: 10px;
+                    }
+                }
+                .already-bid{
+                    margin-top: 40px;
+                    margin-right: 30px;
+                    color: #008e3d;
+                    .flaticon-check-mark::before {
+                        margin-left: 10px;
                     }
                 }
             }

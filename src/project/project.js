@@ -19,11 +19,14 @@ const vars = {
     bidTitle: 'ثبت پیشنهاد',
     bidPlaceHolder: 'پیشنهاد خود را وارد کنید',
     unit: ' تومان',
-    expire: 'مهلت تمام شده'
+    expire: 'مهلت تمام شده',
+    expireBid: 'مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!',
+    alreadyBid: 'شما قبلا پیشنهاد خود را ثبت کرده‌اید'
 }
 const urls = {
     getProject : 'http://localhost:8084/joboonja/project/'
 }
+const loggedInUserId = "1"
 class TopBar extends Component {
     render(){
         return(
@@ -86,6 +89,27 @@ class Bid extends Component {
     }
 }
 
+class ExpireBid extends Component {
+    render(){
+        return(
+            <Row className="expire-bid">
+                <span className="flaticon-danger"></span>
+                <span className="expire-bid-text">{vars.expireBid}</span>
+            </Row>
+        );
+    }
+}
+
+class AlreadyBid extends Component{
+    render(){
+        return(
+            <Row className="already-bid">
+                <span className="flaticon-check-mark"></span>
+                <span className="already-bid-text">{vars.alreadyBid}</span>
+            </Row>
+        );
+    }
+}
 class BidStatusTitle extends Component {
     render(){
         return <Row className="statTitle">{vars.bidTitle}</Row>;
@@ -97,13 +121,15 @@ class ProjectContainer extends Component {
 
         this.state = {
             project : '',
-            remainTime: ''
+            remainTime: '',
+            canBid : true
         }
     }
     componentWillMount = ()=>{
         this.setState({
             project: this.props.project,
-            remainTime: UTL.cmpDate(this.props.project.deadline)
+            remainTime: UTL.cmpDate(this.props.project.deadline),
+            canBid : this.checkForBidingUser(this.props.project.bids)
         })
     }
     componentDidMount = ()=>{
@@ -140,17 +166,37 @@ class ProjectContainer extends Component {
         }
         return s
     }
+    checkForBidingUser = (bids)=>{
+        for(var b in bids){
+            if(bids[b].bidingUser.id === loggedInUserId){
+                return false
+            }
+        }
+        return true
+    }
     render(){
-        // console.log(this.state.remainTime)
+        // console.log(this.state.canBid)
         const p = this.state.project
         const skillBoxes = this.getSkillsList(p.skills)
         const budget = p.budget.toString()
-        var time
-        if (this.state.remainTime.exp === false)
+        var time,expire,timeTitle
+        var bidStatusList = [] 
+        if (this.state.remainTime.exp === false){
             time =this.getTimeString(this.state.remainTime.dif)
+            expire = ''
+            timeTitle = vars.time
+            if(this.state.canBid === true){
+                bidStatusList.push(<BidStatusTitle key='1'/>)
+                bidStatusList.push(<Bid key='2'/>)
+            }else{
+                bidStatusList.push(<AlreadyBid key='1'/>)
+            }
+        }
         else{
-            time = vars.expire
+            timeTitle = vars.expire
+            expire = 'expire'
             clearInterval(this.interval);
+            bidStatusList.push(<ExpireBid key='1'/>)
         }
         return(
             <Jumbotron className="projectContainer align-items-center">
@@ -161,9 +207,9 @@ class ProjectContainer extends Component {
                         </Col>
                         <Col  lg={8} md={6} className="projectInf">
                         <Row className="title">{p.title}</Row>
-                        <Row className="time"><span className="flaticon-deadline"></span>
+                        <Row className={'time ' + expire}><span className="flaticon-deadline"></span>
                         <span className="text-title">
-                            {vars.time}
+                            {timeTitle}
                         </span>
                         <span className="text-time">
                             {time}
@@ -199,8 +245,7 @@ class ProjectContainer extends Component {
                     </Row>
                 </Container>
                 <Container fluid className="status-container">
-                    <BidStatusTitle/>
-                    <Bid/>
+                    {bidStatusList}
                 </Container>
             </Jumbotron>
         );
