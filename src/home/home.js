@@ -6,7 +6,7 @@ import * as Request from '../common/Request'
 import SpinLoader from '../common/SpinLoader'
 import ProjectCard from '../home/ProjectCard'
 import UserCard from '../home/UserCard'
-// import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {
     Card,
@@ -20,12 +20,14 @@ const vars = {
     title : 'جاب‌اونجا خوب است!',
     placeholder: 'جست‌وجو در جاب‌اونجا‌',
     btn: 'جست‌وجو',
-    UserSearch: 'جست‌وجوی نام کاربر'
+    UserSearch: 'جست‌وجوی نام کاربر',
+    cantConnect: 'خطا در برقراری ارتباط با سرور'
 }
 const urls = {
     projects : 'http://localhost:8084/joboonja/project',
     users : 'http://localhost:8084/joboonja/user'
 }
+toast.configure()
 class Title extends Component{
     render(){
         return(
@@ -101,7 +103,7 @@ class Home extends Component {
         isLoadP : false,
         isLoadU : false,
         project: [],
-        user: []
+        user: [],
         }
     }
     componentDidMount = () =>{
@@ -110,8 +112,16 @@ class Home extends Component {
             if(res !== false){
                 this.setState({
                     project: res,
-                    isLoadP : true
+                    isLoadP : true,
                 })
+            }else{
+                toast.error(vars.cantConnect, {
+                    position: "top-left",
+                    autoClose: 10000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                });
             }
         })
         Request.getReq(urls.users).then((res) => {
@@ -119,8 +129,16 @@ class Home extends Component {
             if(res !== false){
             this.setState({
                 user: res,
-                isLoadU: true
+                isLoadU: true,
             })
+            }else{
+                toast.error(vars.cantConnect, {
+                    position: "top-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                });
             }
         })
     }
@@ -141,7 +159,7 @@ class Home extends Component {
         return list
     }
     render(){
-        // toast.configure()
+            
         if (this.state.isLoadP && this.state.isLoadU){
             console.log(this.state)
             const projectsList = this.getProjectList(this.state.project)
@@ -167,15 +185,10 @@ class Home extends Component {
             </div>
         );
         }else{
-            // const notify = () => toast("Wow so easy !");
             return(
-                // <div>
-                    <SpinLoader/>
-                //     {
-                //         toast("Wow so easy !")
-                //     }
-                // </div>
+                <SpinLoader/>
             );
+            
         }
     }
 }

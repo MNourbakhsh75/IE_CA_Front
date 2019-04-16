@@ -10,6 +10,10 @@ import SpinLoader from '../common/SpinLoader'
 import { PersianNumber } from '@thg303/react-persian'
 import * as UTL from '../common/Utilities'
 import TopBar from '../common/TopBar'
+import {
+    toast
+} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 const vars = {
     projectImage : 'https://cdn4.vectorstock.com/i/1000x1000/31/48/software-developer-and-programmer-vector-10673148.jpg',
     title : 'پروژه طراحی سایت جاب‌اونجا',
@@ -22,13 +26,14 @@ const vars = {
     unit: ' تومان',
     expire: 'مهلت تمام شده',
     expireBid: 'مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!',
-    alreadyBid: 'شما قبلا پیشنهاد خود را ثبت کرده‌اید'
+    alreadyBid: 'شما قبلا پیشنهاد خود را ثبت کرده‌اید',
+    cantConnect: 'خطا در برقراری ارتباط با سرور'
 }
 const urls = {
     getProject : 'http://localhost:8084/joboonja/project/'
 }
 const loggedInUserId = "1"
-
+toast.configure()
 class SkillBox extends Component {
     constructor(props){
         super(props)
@@ -252,7 +257,7 @@ class project extends Component {
 
         this.state = {
             project : {},
-            isLoad : false
+            isLoad : false,
         }
     }
     componentDidMount = () =>{
@@ -265,6 +270,14 @@ class project extends Component {
                 project: res,
                 isLoad: true
             })
+            }else{
+                toast.error(vars.cantConnect, {
+                    position: "top-left",
+                    autoClose: 10000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                });
             }
         })
     }
