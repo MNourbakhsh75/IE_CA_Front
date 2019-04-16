@@ -1,0 +1,19 @@
+
+@import "../assets/fonts/iransans-fonts/fonts.scss";
+
+.user {
+    font-family: IRANSans;
+    margin: 0;
+    direction: rtl;
+    height: 100%;
+
+    .content {
+        height: calc(100% - (65px+65px));
+        padding-top: 60px;
+
+        .top-bar{
+            height: 150px;
+            background-color: #B9EEF2;
+        }
+    }
+}

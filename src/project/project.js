@@ -7,8 +7,9 @@ import '../assets/my-icons-collection/font/flaticon.css'
 import * as Request from '../common/Request'
 import queryString from 'query-string'
 import SpinLoader from '../common/SpinLoader'
-import { PersianNumber } from '@thg303/react-persian';
+import { PersianNumber } from '@thg303/react-persian'
 import * as UTL from '../common/Utilities'
+import TopBar from '../common/TopBar'
 const vars = {
     projectImage : 'https://cdn4.vectorstock.com/i/1000x1000/31/48/software-developer-and-programmer-vector-10673148.jpg',
     title : 'پروژه طراحی سایت جاب‌اونجا',
@@ -27,13 +28,6 @@ const urls = {
     getProject : 'http://localhost:8084/joboonja/project/'
 }
 const loggedInUserId = "1"
-class TopBar extends Component {
-    render(){
-        return(
-            <div className="blueLine"></div>
-        );
-    }
-}
 
 class SkillBox extends Component {
     constructor(props){
@@ -69,23 +63,23 @@ class Bid extends Component {
 
         this.state={}
     }
-    handelInputVal = (event) =>{
-        console.log(event.target.value)
+    sendBidData = (event) => {
+        console.log(event)
     }
-        render(){
-        return (
-            <Row className="bid-project">
-                <div className="bidAmount" >
-                <input
-                    type="text"
-                    placeholder= {vars.bidPlaceHolder}
-                    onChange={this.handelInputVal}
-                />
-                <span className="unit">تومان</span>
-                </div>
-                <Button variant="info">ارسال</Button>
-            </Row>
-        );
+    render(){
+    return (
+        <Row className="bid-project">
+            <div className="bidAmount" >
+            <input
+                type="text"
+                placeholder= {vars.bidPlaceHolder}
+                onChange={this.handelInputVal}
+            />
+            <span className="unit">تومان</span>
+            </div>
+            <Button variant="info" onClick={this.sendBidData}>ارسال</Button>
+        </Row>
+    );
     }
 }
 

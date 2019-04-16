@@ -13,7 +13,7 @@ export const cmpDate = (time) => {
         res.dif = ''
     } else {
         var days = Math.floor(cmp / 86400);
-        var hours = Math.floor(cmp / 3600);
+        var hours = Math.floor(cmp / 3600) % 24;
         var minutes = Math.floor(cmp / 60) % 60;
         var seconds = Math.floor(cmp % 60)
         // var hh = hours*60 + minutes
