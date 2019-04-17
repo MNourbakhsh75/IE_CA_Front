@@ -3,12 +3,28 @@ import '../style/user.scss'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
 import TopBar from '../common/TopBar'
+import * as Request from '../common/Request'
+import queryString from 'query-string'
 import {
     Row,
-    Button,
     Image,
-    Col
+    Dropdown,
+    DropdownButton,
 } from 'react-bootstrap'
+import {
+    toast
+} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import SpinLoader from '../common/SpinLoader';
+const vars = {
+    getUserUrl : 'http://localhost:8084/joboonja/user/',
+    cantConnect: 'خطا در برقراری ارتباط با سرور',
+    getAllSkillsUrl: 'http://localhost:8084/joboonja/skills',
+    selectSkill : '--انتخاب مهارت--',
+    AddSkillBtn : 'افزودن مهارت',
+    addSkillslabel : 'مهارت‌ها :'
+}
+const loggedInUserId = "1"
 class ProfileTitle extends Component{
     constructor(props){
         super(props)
@@ -59,26 +75,31 @@ class Bio extends Component{
     }
 }
 
+
 class AddSkill extends Component{
     constructor(props){
         super(props)
 
-        this.state = {}
+        this.state = {
+            selectValue: vars.selectSkill
+        }
     }
-
+    handleChange = (event) => {
+        // console.log(event)
+        this.setState({selectValue: event});
+    }
     render(){
         return(
             <Row className="add-skill-row">
-                <label className="label-for-skill">مهارت ها: </label>
+                <div className="label-for-skill">{vars.addSkillslabel}</div>
                 <div className="skill-list">
-                    <select id="select-field" name="options">
-                        <option value="" disabled selected> --انتخاب مهارت-- </option>
-                        <option value="1">react</option>
-                        <option value="2">app design</option>
-                        <option value="3">photoshop</option>
-                        <option value="4">jquery</option>
-                    </select>
-                    <button className="btn add-skill-btn">افزودن مهارت </button>
+                    <DropdownButton title={this.state.selectValue} onSelect={this.handleChange} alignRight>
+                        {/* <Dropdown.Item eventKey ={vars.selectSkill}>{vars.selectSkill}</Dropdown.Item> */}
+                        <Dropdown.Item eventKey="Action">Action</Dropdown.Item>
+                        <Dropdown.Item eventKey="Another action">Another action</Dropdown.Item>
+                        <Dropdown.Item eventKey="Something else">Something else</Dropdown.Item>
+                    </DropdownButton>
+                    <button className="btn add-skill-btn">{vars.AddSkillBtn}</button>
                 </div>
             </Row>
         );
@@ -89,17 +110,31 @@ class SkillBox extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {}
+        this.state = {
+            name : '',
+            point : 5,
+            pointText : false
+        }
     }
-
+    // componentWillMount = () =>{
+    //     this.setState({name: this.props.name,point:this.props.point})
+    // }
+    handleOver = (e) =>{
+        this.setState({pointText: true})
+        
+    }
+    handleLeave = (e) =>{
+            this.setState({pointText: false})
+    }
     render() {
+        
         return (
-            <div className="skill-box">
+            <div className="skill-box" onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave}>
                 <div className="skill-box-child name">
                     HTML
                 </div>
                 <div className="skill-box-child point">
-                    5
+                    {this.state.pointText ? '-' : this.state.point }
                 </div>
             </div>
         );
@@ -111,10 +146,57 @@ class user extends Component{
     constructor(props){
         super(props)
 
-        this.state = {}
+        this.state = {
+            user : {},
+            isLoadU : false,
+            isLoadS : false,
+            skills : []
+        }
+    }
+
+    // componentWillUpdate = ()=>{
+    //     this.setState({user: this.props.user})
+    // }
+    componentDidMount = () =>{
+        const values = queryString.parse(this.props.location.search)
+        console.log(values.id)
+        Request.getReq(vars.getUserUrl + values.id).then((res) => {
+            if (res !== false) {
+                this.setState({
+                    user: res,
+                    isLoadU: true,
+                })
+            } else {
+                toast.error(vars.cantConnect, {
+                    position: "top-left",
+                    autoClose: 10000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                });
+            }
+        })
+        Request.getReq(vars.getAllSkillsUrl).then((res) => {
+            if (res !== false) {
+                this.setState({
+                    skills: res,
+                    isLoadS: true,
+                })
+            } else {
+                toast.error(vars.cantConnect, {
+                    position: "top-left",
+                    autoClose: 10000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                });
+            }
+        })
     }
 
     render(){
+        if(this.state.isLoadU && this.state.isLoadS){
+            console.log(this.state)
         return(
             <div className="user">
                 <Header/>
@@ -125,13 +207,18 @@ class user extends Component{
                         <AddSkill/>
                         <Row className="skills-boxes">
                             <SkillBox/>
-                            < SkillBox/>
-                            < SkillBox/>
+                            <SkillBox/>
+                            <SkillBox/>
                         </Row>
                     </div>
                 <Footer/>
             </div>
         );
+    }else{
+        return(
+            <SpinLoader/>
+        );
+    }
     }
 }
 export default user;
