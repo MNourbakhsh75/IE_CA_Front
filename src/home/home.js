@@ -117,7 +117,7 @@ class Home extends Component {
             }else{
                 toast.error(vars.cantConnect, {
                     position: "top-left",
-                    autoClose: 10000,
+                    autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,

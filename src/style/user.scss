@@ -26,7 +26,7 @@
                 border-radius: 20px;
                 width: 200px;
                 height: 200px;
-                box-shadow: 0.1px 0px 30px 0.1px #b1b1b1;
+                // box-shadow: 0.1px 0px 30px 0.1px #b1b1b1;
                 position: relative;
                 right: 12%;
 
@@ -58,7 +58,7 @@
                 width: 125px;
                 position: absolute;
                 margin-top: 65px;
-                right: calc(12% + (190px));
+                right: calc(12% + (192px));
             }
 
             .user-name {
@@ -107,13 +107,14 @@
             .skill-list {
                 display: inline-flex;
                 background-color: white;
-                height: 43px;
+                height: 45px;
                 border-radius: 3px;
                 padding: 2.5px 2px 2.5px 2px;
                 // box-shadow: 0.1px 0px 30px 0.1px #b1b1b1;
                 font-size: 13px;
                 .dropdown{
                     width: 200px;
+                    margin: 1px;
                     .btn{
                         color: black;
                         width: 100%;
@@ -129,6 +130,12 @@
                     .dropdown-toggle::after {
                         float: left;
                         margin-top: 10px;
+                    }
+                    .dropdown-menu{
+                        max-height: 200px;
+                        overflow-y: scroll;
+                        position: relative;
+                        top: -40px;
                     }
                 }
                 // #select-field {
@@ -164,6 +171,9 @@
                     font-family: inherit;
                     cursor: pointer;
                     font-size: 13px;
+                    &.add-skill-btn:focus{
+                        box-shadow: none;
+                    }
                 }
 
             }

@@ -33,6 +33,7 @@ class ProfileTitle extends Component{
             fName : '',
             lName : '',
             title : '',
+            picture : ''
         }
     }
 
@@ -40,20 +41,22 @@ class ProfileTitle extends Component{
         this.setState({
             fName : this.props.fName,
             lName : this.props.lName,
-            title : this.props.title
+            title : this.props.title,
+            picture : this.props.picture
         })
     }
 
     render(){
+        const fullName = this.state.fName + ' ' + this.state.lName
         return(
             <Row className="profile-row">
                 <div className="profile-picture">
-                    <Image src="https://imgurl.ir/uploads/l234912_.jpg" fluid></Image>
+                    <Image src={this.state.picture} fluid></Image>
                 </div>
                 <div className="bar"></div>
                 <div className="bar-shadow"></div>
-                <div className="user-name">محمدرضا کیانی</div>
-                <div className="user-title">چیف تی ای</div>
+                <div className="user-name">{fullName}</div>
+                <div className="user-title">{this.state.title}</div>
             </Row>
         );
     }
@@ -63,13 +66,18 @@ class Bio extends Component{
     constructor(props){
         super(props)
 
-        this.state = {}
+        this.state = {
+            bio : ''
+        }
+    }
+    componentWillMount = () =>{
+        this.setState({bio : this.props.bio})
     }
 
     render(){
         return(
             <Row className="bio-row">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                {this.state.bio}
             </Row>
         );
     }
@@ -81,23 +89,37 @@ class AddSkill extends Component{
         super(props)
 
         this.state = {
-            selectValue: vars.selectSkill
+            selectValue: vars.selectSkill,
+            skills : []
         }
     }
+
+    componentWillMount = ()=>{
+        this.setState({skills : this.props.skills})
+    }
+
     handleChange = (event) => {
-        // console.log(event)
         this.setState({selectValue: event});
     }
+    createItemList = () =>{
+        var list = []
+        var {skills} = this.state 
+        for(var s in skills){
+            var comp = <Dropdown.Item key={s} eventKey={skills[s]}>{skills[s]}</Dropdown.Item>
+            list.push(comp)
+        }
+        return list
+    }
     render(){
+        console.log(this.state.skills)
+        const itemList = this.createItemList()
         return(
             <Row className="add-skill-row">
                 <div className="label-for-skill">{vars.addSkillslabel}</div>
                 <div className="skill-list">
-                    <DropdownButton title={this.state.selectValue} onSelect={this.handleChange} alignRight>
+                    <DropdownButton title={this.state.selectValue} onSelect={this.handleChange} drop='down'>
                         {/* <Dropdown.Item eventKey ={vars.selectSkill}>{vars.selectSkill}</Dropdown.Item> */}
-                        <Dropdown.Item eventKey="Action">Action</Dropdown.Item>
-                        <Dropdown.Item eventKey="Another action">Another action</Dropdown.Item>
-                        <Dropdown.Item eventKey="Something else">Something else</Dropdown.Item>
+                        {itemList}
                     </DropdownButton>
                     <button className="btn add-skill-btn">{vars.AddSkillBtn}</button>
                 </div>
@@ -112,13 +134,13 @@ class SkillBox extends Component {
 
         this.state = {
             name : '',
-            point : 5,
+            point : 0,
             pointText : false
         }
     }
-    // componentWillMount = () =>{
-    //     this.setState({name: this.props.name,point:this.props.point})
-    // }
+    componentWillMount = () =>{
+        this.setState({name: this.props.name,point:this.props.point})
+    }
     handleOver = (e) =>{
         this.setState({pointText: true})
         
@@ -131,7 +153,7 @@ class SkillBox extends Component {
         return (
             <div className="skill-box" onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave}>
                 <div className="skill-box-child name">
-                    HTML
+                    {this.state.name}
                 </div>
                 <div className="skill-box-child point">
                     {this.state.pointText ? '-' : this.state.point }
@@ -193,22 +215,41 @@ class user extends Component{
             }
         })
     }
-
+    createSkillsList = ()=>{
+        var list = []
+        var {skills} = this.state.user
+        for (var s in skills){
+            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point}/>
+            list.push(comp)
+        }
+        return list
+    }
     render(){
         if(this.state.isLoadU && this.state.isLoadS){
             console.log(this.state)
+            const skillsList = this.createSkillsList()
         return(
             <div className="user">
                 <Header/>
                     <div className="content">
                         <TopBar/>
-                        <ProfileTitle/>
-                        <Bio/>
-                        <AddSkill/>
+                        < ProfileTitle fName = {
+                            this.state.user.firstName
+                        }
+                        lName = {
+                            this.state.user.lastName
+                        }
+                        title = {
+                            this.state.user.jobTitle
+                        }
+                        picture = {
+                            this.state.user.profilePictureURL
+                        }
+                        />
+                        <Bio bio={this.state.user.bio}/>
+                        <AddSkill skills={this.state.skills}/>
                         <Row className="skills-boxes">
-                            <SkillBox/>
-                            <SkillBox/>
-                            <SkillBox/>
+                            {skillsList}
                         </Row>
                     </div>
                 <Footer/>
