@@ -93,18 +93,16 @@ class SkillBox extends Component {
     }
 
     render() {
-            return (
-                <Row className="skills-boxes">
-                    <div className="skill-box">
-                    <div className="skill-box-child name">
-                        HTML
-                    </div>
-                    <div className="skill-box-child point">
-                        5
-                    </div>
+        return (
+            <div className="skill-box">
+                <div className="skill-box-child name">
+                    HTML
                 </div>
-                </Row>
-            );
+                <div className="skill-box-child point">
+                    5
+                </div>
+            </div>
+        );
     }
 }
 
@@ -125,7 +123,11 @@ class user extends Component{
                         <ProfileTitle/>
                         <Bio/>
                         <AddSkill/>
-                        <SkillBox/>
+                        <Row className="skills-boxes">
+                            <SkillBox/>
+                            < SkillBox/>
+                            < SkillBox/>
+                        </Row>
                     </div>
                 <Footer/>
             </div>
