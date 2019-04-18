@@ -11,10 +11,7 @@ import {
     Dropdown,
     DropdownButton,
 } from 'react-bootstrap'
-import {
-    toast
-} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import * as Toast from '../common/Toast' 
 import SpinLoader from '../common/SpinLoader'
 import { confirmAlert } from 'react-confirm-alert' // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
@@ -30,25 +27,6 @@ const vars = {
 const loggedInUserId = "1"
 
 
-const toastErrorMessage = (msg) => {
-    toast.error(msg, {
-        position: "top-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        rtl : true
-    });
-}
-const toastSuccessMessage = (msg) => {
-    toast.success(msg, {
-        position: "top-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-    });
-}
 class ProfileTitle extends Component{
     constructor(props){
         super(props)
@@ -143,7 +121,7 @@ class AddSkill extends Component{
         if (selectValue !== vars.selectSkill){
             var data = 'skillName=' + selectValue
             // console.log(selectValue)
-            Request.postReq('http://localhost:8084/joboonja/user/1/skill', data).then((res) => {
+            Request.postReq(`http://localhost:8084/joboonja/user/${loggedInUserId}/skill`, data).then((res) => {
                 if(res !== false){
                     console.log(res)
                     if (res.success === true){
@@ -152,12 +130,13 @@ class AddSkill extends Component{
                             point : 0
                         }
                         this.props.callBackFunc(newSkill)
-                        toastSuccessMessage(res.msg)
+                        Toast.SuccessMessage(res.msg)
+                        this.setState({selectValue: vars.selectSkill})
                     }else{
-                        toastErrorMessage(res.msg)
+                        Toast.ErrorMessage(res.msg)
                     }
                 }else{
-                    toastErrorMessage(vars.cantConnect)
+                    Toast.ErrorMessage(vars.cantConnect)
                 }
             })
         }
@@ -202,16 +181,16 @@ class SkillBox extends Component {
     }
     sendDeleteReq = () =>{
         var data = '?skillName='+this.state.name
-        Request.deleteReq('http://localhost:8084/joboonja/user/1/skill'+ data).then((res) => {
+        Request.deleteReq(`http://localhost:8084/joboonja/user/${loggedInUserId}/skill` + data).then((res) => {
             if (res !== false) {
                 if(res.success === true){
                     this.props.callBackFunc(this.state.name)
-                    toastSuccessMessage(res.msg)
+                    Toast.SuccessMessage(res.msg)
                 }else{
-                    toastErrorMessage(res.msg)
+                    Toast.ErrorMessage(res.msg)
                 }
             }else{
-                toastErrorMessage(vars.cantConnect)
+                Toast.ErrorMessage(vars.cantConnect)
             }
         })
     }
@@ -272,7 +251,7 @@ class user extends Component{
                     isLoadU: true,
                 })
             } else {
-                toastErrorMessage(vars.cantConnect)
+                Toast.ErrorMessage(vars.cantConnect)
             }
         })
         Request.getReq(vars.getAllSkillsUrl).then((res) => {
@@ -282,7 +261,7 @@ class user extends Component{
                     isLoadS: true,
                 })
             } else {
-                toastErrorMessage(vars.cantConnect)                
+                Toast.ErrorMessage(vars.cantConnect)                
             }
         })
     }

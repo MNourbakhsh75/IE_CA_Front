@@ -6,8 +6,7 @@ import * as Request from '../common/Request'
 import SpinLoader from '../common/SpinLoader'
 import ProjectCard from '../home/ProjectCard'
 import UserCard from '../home/UserCard'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import * as Toast from '../common/Toast'
 import {
     Card,
     Form,
@@ -27,7 +26,6 @@ const urls = {
     projects : 'http://localhost:8084/joboonja/project',
     users : 'http://localhost:8084/joboonja/user'
 }
-toast.configure()
 class Title extends Component{
     render(){
         return(
@@ -110,18 +108,20 @@ class Home extends Component {
         Request.getReq(urls.projects).then((res) => {
             // console.log(`second`, res)
             if(res !== false){
-                this.setState({
-                    project: res,
-                    isLoadP : true,
-                })
+                if (res.length !== undefined){
+                    this.setState({
+                        project: res,
+                        isLoadP : true,
+                    })
+                }else{
+                    this.setState({
+                        project: {},
+                        isLoadP : true,
+                    })
+                    Toast.ErrorMessage(res.msg)
+                }
             }else{
-                toast.error(vars.cantConnect, {
-                    position: "top-left",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                });
+                Toast.ErrorMessage(vars.cantConnect)
             }
         })
         Request.getReq(urls.users).then((res) => {
@@ -132,13 +132,7 @@ class Home extends Component {
                 isLoadU: true,
             })
             }else{
-                toast.error(vars.cantConnect, {
-                    position: "top-left",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                });
+                Toast.ErrorMessage(vars.cantConnect)
             }
         })
     }
@@ -161,9 +155,14 @@ class Home extends Component {
     render(){
             
         if (this.state.isLoadP && this.state.isLoadU){
-            console.log(this.state)
-            const projectsList = this.getProjectList(this.state.project)
-            const usersList = this.getUsersList(this.state.user)
+            console.log(this.state.project.length)
+            var projectsList,usersList
+            // if (this.state.project.length !== undefined){
+            projectsList = this.getProjectList(this.state.project)
+            // }else{
+            //     Toast.ErrorMessage(this.state.project.msg)
+            // }
+            usersList = this.getUsersList(this.state.user)
         return(
             <div className="home">
             <Header/>
