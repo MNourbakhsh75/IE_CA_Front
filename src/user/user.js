@@ -200,17 +200,32 @@ class SkillBox extends Component {
     handleLeave = (e) =>{
             this.setState({pointText: false})
     }
+    sendDeleteReq = () =>{
+        var data = '?skillName='+this.state.name
+        Request.deleteReq('http://localhost:8084/joboonja/user/1/skill'+ data).then((res) => {
+            if (res !== false) {
+                if(res.success === true){
+                    this.props.callBackFunc(this.state.name)
+                    toastSuccessMessage(res.msg)
+                }else{
+                    toastErrorMessage(res.msg)
+                }
+            }else{
+                toastErrorMessage(vars.cantConnect)
+            }
+        })
+    }
     handleClick = (e) =>{
         console.log(this.state.name)
         confirmAlert({
             message: vars.delSkillConfirm,
             buttons: [{
-                    label: 'Yes',
-                    onClick: () => alert('Click Yes')
+                    label: 'بله',
+                    onClick: () => {this.sendDeleteReq()}
                 },
                 {
-                    label: 'No',
-                    onClick: () => alert('Click No')
+                    label: 'خیر',
+                    onClick: () => {}
                 }
             ]
         });
@@ -276,7 +291,7 @@ class user extends Component{
         var {skills} = this.state.user
         for (var s in skills){
             // console.log(skills[s].name)
-            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point}/>
+            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack}/>
             list.push(comp)
         }
         return list
@@ -286,6 +301,15 @@ class user extends Component{
         // console.log(skills)
         skills.push(data)
         console.log(this.state.user.skills)
+        this.setState({user: this.state.user})
+    }
+    delSkillCallBack = (data) =>{
+        var {skills} = this.state.user
+        for(var s in skills){
+            if (skills[s].name === data){
+                delete skills[s]
+            }
+        }
         this.setState({user: this.state.user})
     }
     render(){

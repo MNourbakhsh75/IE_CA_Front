@@ -229,5 +229,10 @@
         font-family: IRANSans;
         // direction: rtl;
         text-align: right;
+        .react-confirm-alert-button-group{
+            button{
+                background-color: #1BA6B2;
+            }
+        }
     }
 }
