@@ -22,11 +22,15 @@ class UserCard extends Component {
             user: this.props.user
         })
     }
+    handleClick = (event) =>{
+        const id = this.props.user.id
+        this.props.history.push('/user?id=' + id)
+    }
     render(){
         console.log(this.state)
         const fullName = this.state.user.firstName+ ' ' + this.state.user.lastName
         return(
-            <Card className="user-card">
+            <Card className="user-card" onClick={this.handleClick}>
                 <Row className="user-card-row">
                     <Col className="user-image" lg={4} md={4}>
                         <Image src={this.state.user.profilePictureURL}/>

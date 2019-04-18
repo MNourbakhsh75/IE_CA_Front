@@ -22,7 +22,7 @@ const vars = {
     selectSkill : '--انتخاب مهارت--',
     AddSkillBtn : 'افزودن مهارت',
     addSkillslabel : 'مهارت‌ها :',
-    delSkillConfirm :'آیا مطمئن هستتید؟'
+    delSkillConfirm :'آیا مطمئن هستید؟'
 }
 const loggedInUserId = "1"
 
@@ -92,12 +92,13 @@ class AddSkill extends Component{
 
         this.state = {
             selectValue: vars.selectSkill,
-            skills : []
+            skills : [],
+            display : false
         }
     }
 
     componentWillMount = ()=>{
-        this.setState({skills : this.props.skills})
+        this.setState({skills : this.props.skills,display:this.props.display})
     }
 
     handleChange = (event) => {
@@ -145,7 +146,7 @@ class AddSkill extends Component{
         // console.log(this.state.skills)
         const itemList = this.createItemList()
         return(
-            <Row className="add-skill-row">
+            <Row className="add-skill-row" style={{display: (this.state.display) ? 'none' : ''}}>
                 <div className="label-for-skill">{vars.addSkillslabel}</div>
                 <div className="skill-list">
                     <DropdownButton title={this.state.selectValue} onSelect={this.handleChange} drop='down'>
@@ -166,15 +167,28 @@ class SkillBox extends Component {
         this.state = {
             name : '',
             point : 0,
-            pointText : false
+            pointText : false,
+            otherUser : false,
+            skillBoxClassName : '',
+            addOrMinus : '',
+            endorsed : false,
+            handleClick : '',
+            userId : 0
         }
     }
     componentWillMount = () =>{
-        this.setState({name: this.props.name,point:this.props.point})
+        this.setState({
+            name: this.props.name,
+            point:this.props.point,
+            otherUser:this.props.otherUser,
+            skillBoxClassName: (this.props.otherUser) ? 'skill-box other-skill-box' : 'skill-box loggedIn-skill-box',
+            addOrMinus : (this.props.otherUser) ? '+' : '-',
+            handleClick : (this.props.otherUser) ? this.otherHandleClick : this.handleClick,
+            userId : this.props.userId
+        })
     }
     handleOver = (e) =>{
         this.setState({pointText: true})
-        
     }
     handleLeave = (e) =>{
             this.setState({pointText: false})
@@ -209,15 +223,30 @@ class SkillBox extends Component {
             ]
         });
     }
+    otherHandleClick = (e) =>{
+        const data = '?skillName=' + this.state.name
+        Request.putReq(`http://localhost:8084/joboonja/user/${this.state.userId}/skill`+ data).then((res) => {
+            if (res !== false) {
+                if (res.success === true) {
+                    this.props.otherCallBackFunc(this.state.name)
+                    Toast.SuccessMessage(res.msg)
+                } else {
+                    Toast.ErrorMessage(res.msg)
+                }
+            } else {
+                Toast.ErrorMessage(vars.cantConnect)
+            }
+        })
+    }
     render() {
-        
+        console.log(this.state)
         return (
-            <div className="skill-box" onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave} onClick={this.handleClick}>
+            <div className={this.state.skillBoxClassName} onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave} onClick={this.state.handleClick}>
                 <div className="skill-box-child name">
                     {this.state.name}
                 </div>
                 <div className="skill-box-child point">
-                    {this.state.pointText ? '-' : this.state.point }
+                    {this.state.pointText ? this.state.addOrMinus : this.state.point }
                 </div>
             </div>
         );
@@ -233,7 +262,8 @@ class user extends Component{
             user : {},
             isLoadU : false,
             isLoadS : false,
-            skills : []
+            skills : [],
+            otherUser : false
         }
     }
 
@@ -249,6 +279,7 @@ class user extends Component{
                 this.setState({
                     user: res,
                     isLoadU: true,
+                    otherUser : (res.id === loggedInUserId) ? false : true
                 })
             } else {
                 Toast.ErrorMessage(vars.cantConnect)
@@ -269,8 +300,9 @@ class user extends Component{
         var list = []
         var {skills} = this.state.user
         for (var s in skills){
-            // console.log(skills[s].name)
-            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack}/>
+            // console.log(skills[s])
+            // if(this.state.otherUser)
+            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack} otherCallBackFunc={this.endorseSkillCallBack} otherUser={this.state.otherUser} userId={this.state.user.id}/>
             list.push(comp)
         }
         return list
@@ -291,10 +323,22 @@ class user extends Component{
         }
         this.setState({user: this.state.user})
     }
+    endorseSkillCallBack = (data)=>{
+        console.log(data)
+        var {skills} = this.state.user
+        for (var s in skills) {
+            if (skills[s].name === data) {
+                skills[s].point +=1 
+            }
+        }
+        this.setState({user: this.state.user})
+        // console.log(this.state.user)
+    }
     render(){
         if(this.state.isLoadU && this.state.isLoadS){
             console.log(this.state)
             const skillsList = this.createSkillsList()
+            
         return(
             <div className="user">
                 <Header/>
@@ -314,7 +358,7 @@ class user extends Component{
                         }
                         />
                         <Bio bio={this.state.user.bio}/>
-                        <AddSkill skills={this.state.skills} callBackFunc={this.addSkillCallBack}/>
+                        <AddSkill skills={this.state.skills} callBackFunc={this.addSkillCallBack} display={this.state.otherUser}/>
                         <Row className="skills-boxes">
                             {skillsList}
                         </Row>
