@@ -201,6 +201,9 @@
                         // height: 40px;
                         margin-top: 10px;
                     }
+                    .btn-info:focus,.btn:focus{
+                        box-shadow: none;
+                    }
                 }
                 .expire-bid{
                     margin-top: 40px;

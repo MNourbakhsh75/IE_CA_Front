@@ -115,6 +115,7 @@
                 .dropdown{
                     width: 200px;
                     margin: 1px;
+                    direction: ltr;
                     .btn{
                         color: black;
                         width: 100%;
@@ -123,6 +124,7 @@
                         direction: rtl;
                         border-radius: 0;
                         border-color : #f6f6f6;
+                        direction: ltr;
                     }
                     .btn:focus,.btn-primary:focus{
                         box-shadow: none;
@@ -135,7 +137,12 @@
                         max-height: 200px;
                         overflow-y: scroll;
                         position: relative;
+                        direction: ltr;
+                        width: 100%;
                         top: -40px;
+                        .dropdown-item{
+                            direction: ltr;
+                        }
                     }
                 }
                 // #select-field {
@@ -215,5 +222,12 @@
                 }
             }
         }
+    }
+}
+.react-confirm-alert{
+    .react-confirm-alert-body{
+        font-family: IRANSans;
+        // direction: rtl;
+        text-align: right;
     }
 }

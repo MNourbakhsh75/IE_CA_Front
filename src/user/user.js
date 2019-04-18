@@ -15,16 +15,40 @@ import {
     toast
 } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import SpinLoader from '../common/SpinLoader';
+import SpinLoader from '../common/SpinLoader'
+import { confirmAlert } from 'react-confirm-alert' // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 const vars = {
     getUserUrl : 'http://localhost:8084/joboonja/user/',
     cantConnect: 'خطا در برقراری ارتباط با سرور',
     getAllSkillsUrl: 'http://localhost:8084/joboonja/skills',
     selectSkill : '--انتخاب مهارت--',
     AddSkillBtn : 'افزودن مهارت',
-    addSkillslabel : 'مهارت‌ها :'
+    addSkillslabel : 'مهارت‌ها :',
+    delSkillConfirm :'آیا مطمئن هستتید؟'
 }
 const loggedInUserId = "1"
+
+
+const toastErrorMessage = (msg) => {
+    toast.error(msg, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        rtl : true
+    });
+}
+const toastSuccessMessage = (msg) => {
+    toast.success(msg, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+    });
+}
 class ProfileTitle extends Component{
     constructor(props){
         super(props)
@@ -110,8 +134,36 @@ class AddSkill extends Component{
         }
         return list
     }
+    
+    handleClick = (event) =>{
+        var {
+            selectValue
+        } = this.state
+        //console.log(selectValue)
+        if (selectValue !== vars.selectSkill){
+            var data = 'skillName=' + selectValue
+            // console.log(selectValue)
+            Request.postReq('http://localhost:8084/joboonja/user/1/skill', data).then((res) => {
+                if(res !== false){
+                    console.log(res)
+                    if (res.success === true){
+                        var newSkill = {
+                            name: selectValue,
+                            point : 0
+                        }
+                        this.props.callBackFunc(newSkill)
+                        toastSuccessMessage(res.msg)
+                    }else{
+                        toastErrorMessage(res.msg)
+                    }
+                }else{
+                    toastErrorMessage(vars.cantConnect)
+                }
+            })
+        }
+    }
     render(){
-        console.log(this.state.skills)
+        // console.log(this.state.skills)
         const itemList = this.createItemList()
         return(
             <Row className="add-skill-row">
@@ -121,7 +173,7 @@ class AddSkill extends Component{
                         {/* <Dropdown.Item eventKey ={vars.selectSkill}>{vars.selectSkill}</Dropdown.Item> */}
                         {itemList}
                     </DropdownButton>
-                    <button className="btn add-skill-btn">{vars.AddSkillBtn}</button>
+                    <button className="btn add-skill-btn" onClick={this.handleClick}>{vars.AddSkillBtn}</button>
                 </div>
             </Row>
         );
@@ -148,10 +200,25 @@ class SkillBox extends Component {
     handleLeave = (e) =>{
             this.setState({pointText: false})
     }
+    handleClick = (e) =>{
+        console.log(this.state.name)
+        confirmAlert({
+            message: vars.delSkillConfirm,
+            buttons: [{
+                    label: 'Yes',
+                    onClick: () => alert('Click Yes')
+                },
+                {
+                    label: 'No',
+                    onClick: () => alert('Click No')
+                }
+            ]
+        });
+    }
     render() {
         
         return (
-            <div className="skill-box" onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave}>
+            <div className="skill-box" onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave} onClick={this.handleClick}>
                 <div className="skill-box-child name">
                     {this.state.name}
                 </div>
@@ -183,19 +250,14 @@ class user extends Component{
         const values = queryString.parse(this.props.location.search)
         console.log(values.id)
         Request.getReq(vars.getUserUrl + values.id).then((res) => {
+            console.log('khaaaaa')
             if (res !== false) {
                 this.setState({
                     user: res,
                     isLoadU: true,
                 })
             } else {
-                toast.error(vars.cantConnect, {
-                    position: "top-left",
-                    autoClose: 10000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                });
+                toastErrorMessage(vars.cantConnect)
             }
         })
         Request.getReq(vars.getAllSkillsUrl).then((res) => {
@@ -205,13 +267,7 @@ class user extends Component{
                     isLoadS: true,
                 })
             } else {
-                toast.error(vars.cantConnect, {
-                    position: "top-left",
-                    autoClose: 10000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                });
+                toastErrorMessage(vars.cantConnect)                
             }
         })
     }
@@ -219,10 +275,18 @@ class user extends Component{
         var list = []
         var {skills} = this.state.user
         for (var s in skills){
+            // console.log(skills[s].name)
             var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point}/>
             list.push(comp)
         }
         return list
+    }
+    addSkillCallBack = (data) =>{
+        var {skills} = this.state.user
+        // console.log(skills)
+        skills.push(data)
+        console.log(this.state.user.skills)
+        this.setState({user: this.state.user})
     }
     render(){
         if(this.state.isLoadU && this.state.isLoadS){
@@ -247,7 +311,7 @@ class user extends Component{
                         }
                         />
                         <Bio bio={this.state.user.bio}/>
-                        <AddSkill skills={this.state.skills}/>
+                        <AddSkill skills={this.state.skills} callBackFunc={this.addSkillCallBack}/>
                         <Row className="skills-boxes">
                             {skillsList}
                         </Row>

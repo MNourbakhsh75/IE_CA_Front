@@ -66,10 +66,23 @@ class Bid extends Component {
     constructor(props){
         super(props)
 
-        this.state={}
+        this.state={
+            inputValue : '',
+            financialGoal: ''
+        }
+    }
+    handelChange = (event) => {
+        const financialGoal = (event.target.validity.valid) ? event.target.value : this.state.financialGoal;
+        this.setState({
+            financialGoal,
+        });
     }
     sendBidData = (event) => {
-        console.log(event)
+        console.log(this.state.financialGoal)
+        var data = 'amount=' + this.state.financialGoal
+        Request.postReq('http://localhost:8084/joboonja/project/4a63b4d0-7672-4712-b368-319694336ce6/bid', data).then((res) => {
+            console.log(res)
+        })
     }
     render(){
     return (
@@ -77,8 +90,10 @@ class Bid extends Component {
             <div className="bidAmount" >
             <input
                 type="text"
+                value={this.state.financialGoal}
                 placeholder= {vars.bidPlaceHolder}
-                onChange={this.handelInputVal}
+                pattern="[0-9]*"
+                onChange={this.handelChange}
             />
             <span className="unit">تومان</span>
             </div>
@@ -151,13 +166,13 @@ class ProjectContainer extends Component {
     }
     getTimeString = (time) =>{
         var s = ''
-        if (time.d >=0){
+        if (time.d >0){
             s += UTL.persianDigit(time.d.toString()) + ' روز و '
         }
-        if (time.h >=0){
+        if (time.h >0){
             s += UTL.persianDigit(time.h.toString()) + ' ساعت و '
         }
-        if (time.m >=0){
+        if (time.m >0){
             s += UTL.persianDigit(time.m.toString()) + ' دقیقه و '
         }
         if (time.s >=0){
@@ -174,7 +189,7 @@ class ProjectContainer extends Component {
         return true
     }
     render(){
-        // console.log(this.state.canBid)
+        // console.log(this.state)
         const p = this.state.project
         const skillBoxes = this.getSkillsList(p.skills)
         const budget = p.budget.toString()
