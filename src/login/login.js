@@ -65,7 +65,7 @@ class RegBox extends Component {
                 ورود
               </div>
               <div className="form-row" >
-                <FormBox />
+                <FormBox/>
                 <ButtonMake text="ورود" />
                 <a href="../register"><ButtonMake text="ثبت نام" styleName="bnt-border"/></a>
                 <ButtonMake text="فراموشی رمز عبور" styleName="bnt-border" />
