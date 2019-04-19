@@ -51,7 +51,7 @@ class TitleDesc extends Component{
 
 class SearchBar extends Component{
     handel = () => {
-        console.log(`kha!`)
+        // console.log(`kha!`)
     }
     render(){
         return(
@@ -81,7 +81,7 @@ class UserSearch extends Component{
     this.state = {value: ''};
     }
     handelChange = (event) => {
-        console.log(event.target.value)
+        // console.log(event.target.value)
     }
     render(){
         return(
@@ -155,7 +155,7 @@ class Home extends Component {
     render(){
             
         if (this.state.isLoadP && this.state.isLoadU){
-            console.log(this.state.project.length)
+            // console.log(this.state.project.length)
             var projectsList,usersList
             // if (this.state.project.length !== undefined){
             projectsList = this.getProjectList(this.state.project)

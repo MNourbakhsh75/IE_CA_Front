@@ -62,7 +62,7 @@ class ProjectCard extends Component{
         this.props.history.push('/project?id='+id)
     }
     render (){
-        console.log(this.state.remainTime)
+        // console.log(this.state.remainTime)
         //1556112461000
         // console.log(date)
         var deadComp = []

@@ -123,7 +123,7 @@ class AddSkill extends Component{
             // console.log(selectValue)
             Request.postReq(`http://localhost:8084/joboonja/user/${loggedInUserId}/skill`, data).then((res) => {
                 if(res !== false){
-                    console.log(res)
+                    // console.log(res)
                     if (res.success === true){
                         var newSkill = {
                             name: selectValue,
@@ -177,7 +177,7 @@ class SkillBox extends Component {
         }
     }
     componentWillMount = () =>{
-        console.log('kha')
+        // console.log('kha')
         this.setState({
             name: this.props.name,
             point:this.props.point,
@@ -222,7 +222,7 @@ class SkillBox extends Component {
         })
     }
     handleClick = (e) =>{
-        console.log(this.state.name)
+        // console.log(this.state.name)
         confirmAlert({
             message: vars.delSkillConfirm,
             buttons: [{
@@ -241,7 +241,7 @@ class SkillBox extends Component {
         Request.putReq(`http://localhost:8084/joboonja/user/${this.state.userId}/skill`+ data).then((res) => {
             if (res !== false) {
                 if (res.success === true) {
-                    console.log(res)
+                    // console.log(res)
                     this.props.otherCallBackFunc(this.state.name)
                     Toast.SuccessMessage(res.msg)
                     this.setState({
@@ -260,7 +260,7 @@ class SkillBox extends Component {
             endorsedArray
         } = this.state
         for (var s in endorsedArray){
-            console.log(this.state.name,endorsedArray[s])
+            // console.log(this.state.name,endorsedArray[s])
             if(this.state.name === endorsedArray[s]){
                 return 'endorsed'
             }
@@ -304,9 +304,9 @@ class user extends Component{
     // }
     componentDidMount = () =>{
         const values = queryString.parse(this.props.location.search)
-        console.log(values.id)
+        // console.log(values.id)
         Request.getReq(vars.getUserUrl + values.id).then((res) => {
-            console.log(res)
+            // console.log(res)
             if (res !== false) {
                 this.setState({
                     user: res.user,
@@ -344,7 +344,7 @@ class user extends Component{
         var {skills} = this.state.user
         // console.log(skills)
         skills.push(data)
-        console.log(this.state.user.skills)
+        // console.log(this.state.user.skills)
         this.setState({user: this.state.user})
     }
     delSkillCallBack = (data) =>{
@@ -357,7 +357,7 @@ class user extends Component{
         this.setState({user: this.state.user})
     }
     endorseSkillCallBack = (data)=>{
-        console.log(data)
+        // console.log(data)
         var {skills} = this.state.user
         for (var s in skills) {
             if (skills[s].name === data) {
