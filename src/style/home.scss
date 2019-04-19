@@ -237,7 +237,7 @@
             margin-right: 50px;
             height: calc(100% - (265px + 65px));
             .user-search-card{
-                height: 9%;
+                // height: 9%;
                 .user-search-row{
                     margin: 0;
                     width: 97%;
@@ -250,6 +250,7 @@
                         height: 100%;
                         background-color: #f9f9f9;
                         border: none;
+                        font-size: 1.5vw;
                     }
                     input:focus{
                         border: none;

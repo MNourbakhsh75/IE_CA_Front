@@ -10,10 +10,8 @@ import SpinLoader from '../common/SpinLoader'
 import { PersianNumber } from '@thg303/react-persian'
 import * as UTL from '../common/Utilities'
 import TopBar from '../common/TopBar'
-import {
-    toast
-} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import * as Toast from '../common/Toast'
+
 const vars = {
     projectImage : 'https://cdn4.vectorstock.com/i/1000x1000/31/48/software-developer-and-programmer-vector-10673148.jpg',
     title : 'پروژه طراحی سایت جاب‌اونجا',
@@ -33,7 +31,6 @@ const urls = {
     getProject : 'http://localhost:8084/joboonja/project/'
 }
 const loggedInUserId = "1"
-toast.configure()
 class SkillBox extends Component {
     constructor(props){
         super(props)
@@ -68,7 +65,8 @@ class Bid extends Component {
 
         this.state={
             inputValue : '',
-            financialGoal: ''
+            financialGoal: '',
+            projectId : ''
         }
     }
     handelChange = (event) => {
@@ -77,11 +75,26 @@ class Bid extends Component {
             financialGoal,
         });
     }
+    componentWillMount = () =>{
+        this.setState({
+            projectId: this.props.projectId
+        })
+    }
     sendBidData = (event) => {
         console.log(this.state.financialGoal)
         var data = 'amount=' + this.state.financialGoal
-        Request.postReq('http://localhost:8084/joboonja/project/4a63b4d0-7672-4712-b368-319694336ce6/bid', data).then((res) => {
+        Request.postReq(`http://localhost:8084/joboonja/project/${this.state.projectId}/bid`, data).then((res) => {
             console.log(res)
+            if (res !== false) {
+                if (res.success === true) {
+                    this.props.callBackFunc(false)
+                    Toast.SuccessMessage(res.msg)
+                } else {
+                    Toast.ErrorMessage(res.msg)
+                }
+            } else {
+                Toast.ErrorMessage(vars.cantConnect)
+            }
         })
     }
     render(){
@@ -149,7 +162,7 @@ class ProjectContainer extends Component {
     componentDidMount = ()=>{
         this.interval = setInterval(()=>{
             this.setState({
-                remainTime: UTL.cmpDate(this.state.project.deadline)
+                remainTime: UTL.cmpDate(this.state.project.deadline) //???
             })
         },1000)
     }
@@ -188,6 +201,12 @@ class ProjectContainer extends Component {
         }
         return true
     }
+    callBackFunc = (data) =>{
+        this.setState({
+            canBid : data
+        })
+        console.log(this.state.canBid)
+    }
     render(){
         // console.log(this.state)
         const p = this.state.project
@@ -201,7 +220,7 @@ class ProjectContainer extends Component {
             timeTitle = vars.time
             if(this.state.canBid === true){
                 bidStatusList.push(<BidStatusTitle key='1'/>)
-                bidStatusList.push(<Bid key='2'/>)
+                bidStatusList.push(<Bid projectId={this.state.project.id} callBackFunc={this.callBackFunc} key='2'/>)
             }else{
                 bidStatusList.push(<AlreadyBid key='1'/>)
             }
@@ -240,7 +259,7 @@ class ProjectContainer extends Component {
                         <Row className="winner" hidden>
                             <span className="flaticon-check-mark"></span>
                             <span className="text">
-                                خروو
+                                
                             </span>
                         </Row>
                         <Row className="desc">{vars.desc}</Row>
@@ -286,13 +305,7 @@ class project extends Component {
                 isLoad: true
             })
             }else{
-                toast.error(vars.cantConnect, {
-                    position: "top-left",
-                    autoClose: 10000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                });
+                Toast.ErrorMessage(vars.cantConnect)
             }
         })
     }
