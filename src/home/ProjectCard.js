@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import '../style/home.scss'
-// import { ToastContainer, toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
 import {
     Card,
     Row,
