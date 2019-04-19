@@ -26,7 +26,6 @@ const vars = {
 }
 const loggedInUserId = "1"
 
-
 class ProfileTitle extends Component{
     constructor(props){
         super(props)
@@ -173,10 +172,12 @@ class SkillBox extends Component {
             addOrMinus : '',
             endorsed : false,
             handleClick : '',
-            userId : 0
+            userId : 0,
+            endorsedArray : []
         }
     }
     componentWillMount = () =>{
+        console.log('kha')
         this.setState({
             name: this.props.name,
             point:this.props.point,
@@ -184,9 +185,21 @@ class SkillBox extends Component {
             skillBoxClassName: (this.props.otherUser) ? 'skill-box other-skill-box' : 'skill-box loggedIn-skill-box',
             addOrMinus : (this.props.otherUser) ? '+' : '-',
             handleClick : (this.props.otherUser) ? this.otherHandleClick : this.handleClick,
-            userId : this.props.userId
+            userId : this.props.userId,
+            endorsedArray : this.props.endorsedArray
         })
     }
+
+    componentWillReceiveProps = (nextProps) => {
+        // console.log('next : ',this.state.endorsed)
+        if(this.state.endorsed !== true){
+            this.setState({ 
+                point: nextProps.point,
+                // endorsed : true
+            })
+        }
+    }
+
     handleOver = (e) =>{
         this.setState({pointText: true})
     }
@@ -228,8 +241,12 @@ class SkillBox extends Component {
         Request.putReq(`http://localhost:8084/joboonja/user/${this.state.userId}/skill`+ data).then((res) => {
             if (res !== false) {
                 if (res.success === true) {
+                    console.log(res)
                     this.props.otherCallBackFunc(this.state.name)
                     Toast.SuccessMessage(res.msg)
+                    this.setState({
+                        endorsed: true
+                    })
                 } else {
                     Toast.ErrorMessage(res.msg)
                 }
@@ -238,14 +255,28 @@ class SkillBox extends Component {
             }
         })
     }
+    checkForEndorse = () =>{
+        var {
+            endorsedArray
+        } = this.state
+        for (var s in endorsedArray){
+            console.log(this.state.name,endorsedArray[s])
+            if(this.state.name === endorsedArray[s]){
+                return 'endorsed'
+            }
+        }
+        return ''
+    }
     render() {
-        console.log(this.state)
+        // console.log('sec : ', this.state.endorsedArray)
+        var endorseClassName = this.checkForEndorse()
+        var endorseClassNameC = (this.state.endorsed) ? 'endorsed' : ''
         return (
             <div className={this.state.skillBoxClassName} onMouseEnter={this.handleOver} onMouseLeave={this.handleLeave} onClick={this.state.handleClick}>
                 <div className="skill-box-child name">
                     {this.state.name}
                 </div>
-                <div className="skill-box-child point">
+                <div className={'skill-box-child point ' + endorseClassName + ' '+endorseClassNameC}>
                     {this.state.pointText ? this.state.addOrMinus : this.state.point }
                 </div>
             </div>
@@ -263,7 +294,8 @@ class user extends Component{
             isLoadU : false,
             isLoadS : false,
             skills : [],
-            otherUser : false
+            otherUser : false,
+            endorsedArray : []
         }
     }
 
@@ -274,12 +306,13 @@ class user extends Component{
         const values = queryString.parse(this.props.location.search)
         console.log(values.id)
         Request.getReq(vars.getUserUrl + values.id).then((res) => {
-            console.log('khaaaaa')
+            console.log(res)
             if (res !== false) {
                 this.setState({
-                    user: res,
+                    user: res.user,
                     isLoadU: true,
-                    otherUser : (res.id === loggedInUserId) ? false : true
+                    otherUser : (res.user.id === loggedInUserId) ? false : true,
+                    endorsedArray : res.endorse
                 })
             } else {
                 Toast.ErrorMessage(vars.cantConnect)
@@ -302,7 +335,7 @@ class user extends Component{
         for (var s in skills){
             // console.log(skills[s])
             // if(this.state.otherUser)
-            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack} otherCallBackFunc={this.endorseSkillCallBack} otherUser={this.state.otherUser} userId={this.state.user.id}/>
+            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack} otherCallBackFunc={this.endorseSkillCallBack} otherUser={this.state.otherUser} userId={this.state.user.id} endorsedArray={this.state.endorsedArray}/>
             list.push(comp)
         }
         return list
@@ -336,7 +369,7 @@ class user extends Component{
     }
     render(){
         if(this.state.isLoadU && this.state.isLoadS){
-            console.log(this.state)
+            // console.log(this.state)
             const skillsList = this.createSkillsList()
             
         return(
