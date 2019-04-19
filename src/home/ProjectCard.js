@@ -22,32 +22,34 @@ class ProjectCard extends Component{
         this.state = {
             project:{},
             deadLineComponent: '',
-            deadLineTime:''
+            deadLineTime:'',
+            remainTime: ''
         }
     }
     componentWillMount = ()=>{
-        this.setState({project: this.props.project})
+        this.setState({
+            project: this.props.project,
+            remainTime : UTL.cmpDate(this.props.project.deadline)
+        })
         // console.log(this.state)
     }
-    
-    getDateComp = (time) =>{
-        var date = UTL.cmpDate(time)
-        console.log(date.dif)
-        const t = date.dif.h +':' + date.dif.m
-        if (date.exp){
-            return <ExpireTime/>
+    getDateString = (time) =>{
+        if (time.d > 0){
+            return time.d  + ' روز '
         }else{
-            return <RemainTime time={t}/>
+            return time.h + ':' + time.m
         }
     }
-    // componentDidMount = ()=>{
-    //     this.interval= setInterval(() => this.setState({
-    //         deadLineTime: this.cmpDate(this.state.project.deadline)
-    //     }), 60000)
-    // }
-    // componentWillUnmount() {
-    //     clearInterval(this.interval);
-    // }
+    componentDidMount = () => {
+        this.interval = setInterval(() => {
+            this.setState({
+                remainTime: UTL.cmpDate(this.state.project.deadline)
+            })
+        }, 60000)
+    }
+    componentWillUnmount = () => {
+        clearInterval(this.interval);
+    }
     getSkillsComp = (skills) =>{
         // console.log(skills)
         var list = []
@@ -62,10 +64,17 @@ class ProjectCard extends Component{
         this.props.history.push('/project?id='+id)
     }
     render (){
-        // console.log(this.state)
+        console.log(this.state.remainTime)
         //1556112461000
         // console.log(date)
-        var deadLineComponent = this.getDateComp(this.state.project.deadline)
+        var deadComp = []
+        if (this.state.remainTime.exp === false){
+            var t = this.getDateString(this.state.remainTime.dif)
+            deadComp.push(<RemainTime key="1" time={t}/>)
+        }else{
+            deadComp.push(<ExpireTime key ="1"/>)
+        }
+        // var deadLineComponent = this.getDateComp(this.state.project.deadline)
         const budget = this.state.project.budget.toString()
         const skillList = this.getSkillsComp(this.state.project.skills)
         // console.log(skillList)
@@ -81,7 +90,7 @@ class ProjectCard extends Component{
                             {this.state.project.title}
                         </Col>
                         <Col lg={4} md={5} className="time">
-                            {deadLineComponent}
+                            {deadComp}
                         </Col>
                     </Row>
                     <Row className="project-desc">
@@ -131,11 +140,14 @@ class RemainTime extends Component{
     componentWillMount = () => {
         this.setState({time : this.props.time})
     }
-    // componentDidUpdate = () => {
-    //     this.setState({time : this.props.time})
-    // }
+    componentWillReceiveProps = (nextProps) =>{
+        this.setState({
+            time : nextProps.time
+        })
+    }
 
     render(){
+        // console.log(this.state.time)
         return(
             <span className="remain-time">
                 زمان باقی مانده: <PersianNumber>{this.state.time}</PersianNumber>
