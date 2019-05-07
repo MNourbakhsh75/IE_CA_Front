@@ -24,7 +24,9 @@ const vars = {
 }
 const urls = {
     projects : 'http://localhost:8084/joboonja/project',
-    users : 'http://localhost:8084/joboonja/user'
+    users : 'http://localhost:8084/joboonja/user',
+    searchUser: 'http://localhost:8084/joboonja/search/user',
+    searchProject: 'http://localhost:8084/joboonja/search/project'
 }
 class Title extends Component{
     render(){
@@ -50,8 +52,41 @@ class TitleDesc extends Component{
 
 
 class SearchBar extends Component{
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            value: ''
+        };
+    }
     handel = () => {
-        // console.log(`kha!`)
+        console.log(this.state.value)
+        Request.getReq(urls.searchProject + '?name=' + this.state.value).then((res) => {
+            console.log(`second`, res)
+            if (res !== false) {
+                if (res.length !== undefined) {
+                    this.props.callBackFunc(res)
+                    // this.setState({
+                    //     project: res,
+                    //     isLoadP: true,
+                    // })
+                } else {
+                    // this.setState({
+                    //     project: {},
+                    //     isLoadP: true,
+                    // })
+                    Toast.ErrorMessage(res.msg)
+                }
+            } else {
+                Toast.ErrorMessage(vars.cantConnect)
+            }
+        })
+    }
+    handleChange = (event) => {
+        this.setState({
+            value : event.target.value
+        })
     }
     render(){
         return(
@@ -62,9 +97,10 @@ class SearchBar extends Component{
                             type="text"
                             placeholder={vars.placeholder}
                             aria-describedby="inputGroupAppend"
+                            onChange = {this.handleChange}
                         />
                         <InputGroup.Append>
-                            <Button className="search-button" onClick={this.handel}>{vars.btn}</Button>
+                            <Button className="search-button" onClick={this.handel} >{vars.btn}</Button>
                         </InputGroup.Append>
                     </InputGroup>
                 </Form.Row>
@@ -81,7 +117,27 @@ class UserSearch extends Component{
     this.state = {value: ''};
     }
     handelChange = (event) => {
-        // console.log(event.target.value)
+        console.log(event.target.value)
+        Request.getReq(urls.searchUser + '?name=' + event.target.value).then((res) => {
+            // console.log(`second`, res)
+            if (res !== false) {
+                if (res.length !== undefined) {
+                    this.props.callBackFunc(res)
+                    // this.setState({
+                    //     project: res,
+                    //     isLoadP: true,
+                    // })
+                } else {
+                    // this.setState({
+                    //     project: {},
+                    //     isLoadP: true,
+                    // })
+                    Toast.ErrorMessage(res.msg)
+                }
+            } else {
+                Toast.ErrorMessage(vars.cantConnect)
+            }
+        })
     }
     render(){
         return(
@@ -102,6 +158,7 @@ class Home extends Component {
         isLoadU : false,
         project: [],
         user: [],
+        prevUsers : []
         }
     }
     componentDidMount = () =>{
@@ -129,6 +186,7 @@ class Home extends Component {
             if(res !== false){
             this.setState({
                 user: res,
+                prevUsers : res,
                 isLoadU: true,
             })
             }else{
@@ -152,6 +210,28 @@ class Home extends Component {
         }
         return list
     }
+    searchProjectCallBack = (projects) =>{
+        console.log(projects);
+        if (projects.length !== 0) {
+            this.setState({
+                project: projects
+            })
+        }
+    }
+    userSearchCallBack = (users) =>{
+        console.log(users);
+        if(users.length !== 0){
+            this.setState({
+                user: users
+            })
+        }
+        else{
+            this.setState({
+                user: this.state.prevUsers
+            })
+        }
+        console.log(this.state.user)
+    }
     render(){
             
         if (this.state.isLoadP && this.state.isLoadU){
@@ -170,13 +250,13 @@ class Home extends Component {
                 <div className="blueLine">
                     <Title/>
                     <TitleDesc/>
-                    <SearchBar/>
+                    <SearchBar callBackFunc={this.searchProjectCallBack}/>
                 </div>
                 <div className="projects">
                     {projectsList}
                 </div>
                 <div className="users">
-                    <UserSearch/>
+                    <UserSearch callBackFunc={this.userSearchCallBack}/>
                     {usersList}    
                 </div>
             </div>
