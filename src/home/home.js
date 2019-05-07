@@ -205,13 +205,14 @@ class Home extends Component {
     getUsersList = (users) =>{
         var list = []
         for(var u in users){
+            // console.log('list: ' + users[u].firstName)
             const user = <UserCard user={users[u]} key={u}/>
             list.push(user)
         }
         return list
     }
     searchProjectCallBack = (projects) =>{
-        console.log(projects);
+        // console.log(projects);
         if (projects.length !== 0) {
             this.setState({
                 project: projects
@@ -219,7 +220,7 @@ class Home extends Component {
         }
     }
     userSearchCallBack = (users) =>{
-        console.log(users);
+        // console.log(users);
         if(users.length !== 0){
             this.setState({
                 user: users
@@ -230,7 +231,7 @@ class Home extends Component {
                 user: this.state.prevUsers
             })
         }
-        console.log(this.state.user)
+        // console.log(this.state.user)
     }
     render(){
             

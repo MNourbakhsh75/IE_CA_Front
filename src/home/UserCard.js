@@ -26,8 +26,13 @@ class UserCard extends Component {
         const id = this.props.user.id
         this.props.history.push('/user?id=' + id)
     }
+    componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            user : nextProps.user
+        })
+    }
     render(){
-        // console.log(this.state)
+        // console.log("UC : ",this.state.user)
         const fullName = this.state.user.firstName+ ' ' + this.state.user.lastName
         return(
             <Card className="user-card" onClick={this.handleClick}>

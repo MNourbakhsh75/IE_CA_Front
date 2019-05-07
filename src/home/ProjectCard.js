@@ -48,6 +48,11 @@ class ProjectCard extends Component{
     componentWillUnmount = () => {
         clearInterval(this.interval);
     }
+    componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            project: nextProps.project
+        })
+    }
     getSkillsComp = (skills) =>{
         // console.log(skills)
         var list = []
