@@ -1,39 +1,106 @@
 import React, { Component } from 'react';
 import Footer from '../common/Footer'
 import '../style/login.scss'
-import {Jumbotron ,Form, Row ,Col,} from 'react-bootstrap'
+import {
+  Jumbotron,
+  Form,
+  Row,
+  Col,
+  Button
+} from 'react-bootstrap'
 import logo from '../assets/logo/logo v2.png'
+import * as Toast from '../common/Toast'
+import * as Request from '../common/Request'
 import classnames from 'classnames';
-class InputBlock extends Component{
-  render()
-  {
-    var nameOfClass="input-col "
-    return(
-      <Form.Group className="input-block" as={Row}>
-        <Form.Label  className="input-label" column sm={6}>
-          {this.props.labelName}
-        </Form.Label>
-        <Col className={nameOfClass} sm={6}>
-          <Form.Control type={this.props.type} placeholder={this.props.placeholder} className="input" />
-
-        </Col>
-      </Form.Group>
-    );
-  }
+import {
+  withRouter
+} from 'react-router-dom'
+const vars = {
+  title: 'جاب‌اونجا خوب است!',
+  placeholder: 'جست‌وجو در جاب‌اونجا‌',
+  btn: 'جست‌وجو',
+  UserSearch: 'جست‌وجوی نام کاربر',
+  cantConnect: 'خطا در برقراری ارتباط با سرور'
 }
+
 class FormBox extends Component {
-    render(){
-        return(
-          <div className="form-div">
-            <Form>
-              <fieldset>
-                <InputBlock labelName="نام کاربری" type="" placeholder="Username" />
-                <InputBlock labelName="رمز عبور" type="password" placeholder="Password" />
-              </fieldset>
-            </Form>
-          </div>
-        );
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      validated: false,
+      display: 'none',
+      color: '',
+      msg: '',
+      className: ''
+    };
+  }
+  handleSubmit = (event) =>{
+    event.preventDefault();
+    let sendingData = new URLSearchParams();
+    let data = {}
+    data = {
+      userName: event.target.username.value,
+      password: event.target.password.value,
     }
+    sendingData.append('data', JSON.stringify(data));
+    // console.log(localStorage)
+    Request.postReq(`http://localhost:8084/joboonja/login`, sendingData).then((res) => {
+      if (res !== false) {
+        console.log(res)
+        if (res.success === true) {
+            localStorage.setItem("token", res.token)
+            console.log(localStorage)
+            Toast.SuccessMessage(res.msg)
+            this.props.history.push('/home')
+        } else {
+          Toast.ErrorMessage(res.msg)
+        }
+      } else {
+        Toast.ErrorMessage(vars.cantConnect)
+      }
+    })
+  }
+  render(){
+      return(
+        <div className="form-div">
+          <Form
+          onSubmit={this.handleSubmit}>
+            <Form.Group as={Row}  controlId="validationUsername">
+              <Form.Label  column sm = {3}>نام کاربری</Form.Label>
+              <Col  sm = {9}>
+              <Form.Control
+                required
+                type="text"
+                name="username"
+                // onChange={this.handleChange}
+                // className={this.state.className}
+              />
+              {/* <div  style={{display: this.state.display,color: this.state.color}}>{this.state.msg}</div> */}
+              </Col>
+            </Form.Group>
+            <Form.Group as = {Row} controlId = "formHorizontalPassword">
+              <Form.Label column sm = {3}>
+              رمز عبور
+              </Form.Label> 
+              <Col sm = {9}>
+              <Form.Control 
+              required
+              type="password"
+              name="password"
+              />
+              </Col>
+            </Form.Group>
+            <Row className="btn-class">
+              <Button variant = "primary"
+                type = "submit" >
+                ورود
+              </Button>
+            </Row>
+          </Form>
+        </div>
+      );
+  }
 }
 
 class ButtonMake extends Component {
@@ -65,10 +132,44 @@ class RegBox extends Component {
                 ورود
               </div>
               <div className="form-row" >
-                <FormBox/>
-                <ButtonMake text="ورود" />
+                <div className="form-div">
+          <Form
+          onSubmit={this.handleSubmit}>
+            <Form.Group as={Row}  controlId="validationUsername">
+              <Form.Label  column sm = {3}>نام کاربری</Form.Label>
+              <Col  sm = {9}>
+              <Form.Control
+                required
+                type="text"
+                name="username"
+                // onChange={this.handleChange}
+                // className={this.state.className}
+              />
+              {/* <div  style={{display: this.state.display,color: this.state.color}}>{this.state.msg}</div> */}
+              </Col>
+            </Form.Group>
+            <Form.Group as = {Row} controlId = "formHorizontalPassword">
+              <Form.Label column sm = {3}>
+              رمز عبور
+              </Form.Label> 
+              <Col sm = {9}>
+              <Form.Control 
+              required
+              type="password"
+              name="password"
+              />
+              </Col>
+            </Form.Group>
+            <Row className="btn-class">
+              <Button variant = "primary"
+                type = "submit" >
+                ورود
+              </Button>
+            </Row>
+          </Form>
+        </div>
+                {/* <ButtonMake text="ورود" /> */}
                 <a href="../register"><ButtonMake text="ثبت نام" styleName="bnt-border"/></a>
-                <ButtonMake text="فراموشی رمز عبور" styleName="bnt-border" />
               </div>
             </div>
           </Jumbotron>
@@ -76,17 +177,101 @@ class RegBox extends Component {
     }
 }
 class login extends Component{
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      validated: false,
+      display: 'none',
+      color: '',
+      msg: '',
+      className: ''
+    };
+  }
+  handleSubmit = (event) =>{
+    event.preventDefault();
+    let sendingData = new URLSearchParams();
+    let data = {}
+    data = {
+      userName: event.target.username.value,
+      password: event.target.password.value,
+    }
+    sendingData.append('data', JSON.stringify(data));
+    // console.log(localStorage)
+    Request.postReq(`http://localhost:8084/joboonja/login`, sendingData).then((res) => {
+      if (res !== false) {
+        console.log(res)
+        if (res.success === true) {
+            localStorage.setItem("token", res.token)
+            console.log(localStorage)
+            Toast.SuccessMessage(res.msg)
+            this.props.history.push('/home')
+        } else {
+          Toast.ErrorMessage(res.msg)
+        }
+      } else {
+        Toast.ErrorMessage(vars.cantConnect)
+      }
+    })
+  }
   render(){
     return(
       <div className="login">
         <div className="content">
           <div className = "top-bar"></div>
-          <RegBox/>
+          <Jumbotron className="box-row">
+          <div className="logo-div">
+          <img alt="logo icon" src={logo}/>
+          </div>
+            <div className="box">
+              <div className="box-title">
+                ورود
+              </div>
+              <div className="form-row" >
+                <div className="form-div">
+          <Form
+          onSubmit={this.handleSubmit}>
+            <Form.Group as={Row}  controlId="validationUsername">
+              <Form.Label  column sm = {3}>نام کاربری</Form.Label>
+              <Col  sm = {9}>
+              <Form.Control
+                required
+                type="text"
+                name="username"
+                // onChange={this.handleChange}
+                // className={this.state.className}
+              />
+              {/* <div  style={{display: this.state.display,color: this.state.color}}>{this.state.msg}</div> */}
+              </Col>
+            </Form.Group>
+            <Form.Group as = {Row} controlId = "formHorizontalPassword">
+              <Form.Label column sm = {3}>
+              رمز عبور
+              </Form.Label> 
+              <Col sm = {9}>
+              <Form.Control 
+              required
+              type="password"
+              name="password"
+              />
+              </Col>
+            </Form.Group>
+            <Row className="btn-class">
+              <Button variant = "primary"
+                type = "submit" >
+                ورود
+              </Button>
+            </Row>
+          </Form>
+        </div>
+                {/* <ButtonMake text="ورود" /> */}
+                <a href="../register"><ButtonMake text="ثبت نام" styleName="bnt-border"/></a>
+              </div>
+            </div>
+          </Jumbotron>
         </div>
         <Footer/>
       </div>
     );
   }
 }
-export default login
+export default withRouter(login)

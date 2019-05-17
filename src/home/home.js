@@ -25,7 +25,7 @@ const vars = {
 const urls = {
     projects : 'http://localhost:8084/joboonja/project',
     users : 'http://localhost:8084/joboonja/user',
-    searchUser: 'http://localhost:8084/joboonja/search/user',
+    searchUser: 'http://localhost:8084/joboonja/user/search',
     searchProject: 'http://localhost:8084/joboonja/search/project'
 }
 class Title extends Component{
@@ -62,7 +62,7 @@ class SearchBar extends Component{
     }
     handel = () => {
         console.log(this.state.value)
-        Request.getReq(urls.searchProject + '?name=' + this.state.value).then((res) => {
+        Request.getReq(urls.searchProject + '?q=' + this.state.value).then((res) => {
             console.log(`second`, res)
             if (res !== false) {
                 if (res.length !== undefined) {
@@ -118,7 +118,7 @@ class UserSearch extends Component{
     }
     handelChange = (event) => {
         console.log(event.target.value)
-        Request.getReq(urls.searchUser + '?name=' + event.target.value).then((res) => {
+        Request.getReq(urls.searchUser + '?q=' + event.target.value).then((res) => {
             // console.log(`second`, res)
             if (res !== false) {
                 if (res.length !== undefined) {
@@ -234,7 +234,7 @@ class Home extends Component {
         // console.log(this.state.user)
     }
     render(){
-            
+    
         if (this.state.isLoadP && this.state.isLoadU){
             // console.log(this.state.project.length)
             var projectsList,usersList

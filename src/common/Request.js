@@ -2,10 +2,12 @@ export const getReq = async (url) =>{
     var headers = {
         'Content-Type':'aplication/json; charset=utf-8',
     }
+    if (localStorage.getItem("token"))
+        headers["token"] = localStorage.getItem("token");
+        console.log(headers["token"])
     return fetch(url,
                 {
                     method:'GET',
-                    mode: 'cors',
                     headers
                 })  
         .then(response=> {
@@ -24,9 +26,12 @@ export const getReq = async (url) =>{
         );
 }
 export const postReq = async (url,data) => {
-    var headers = {
+    let headers = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     }
+    if (localStorage.getItem("token"))
+        headers["token"] = localStorage.getItem("token");
+    // console.log(headers["token"])
     return fetch(url, {
             method: 'POST',
             headers,
