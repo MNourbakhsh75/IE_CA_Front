@@ -299,13 +299,20 @@ class project extends Component {
         // console.log(values.id)
         Request.getReq(urls.getProject+values.id).then((res) => {
             // console.log(`second`, res)
-            if(res !== false){
+            if (res === false)
+                this.props.history.push('/login')
+            else if(res.success !== false){
             this.setState({
                 project: res,
                 isLoad: true
             })
             }else{
-                Toast.ErrorMessage(vars.cantConnect)
+                if (res.code === 403) {
+                    Toast.ErrorMessage(res.msg)
+                    this.props.history.push('/login')
+                } else {
+                    Toast.ErrorMessage(vars.cantConnect)
+                }
             }
         })
     }

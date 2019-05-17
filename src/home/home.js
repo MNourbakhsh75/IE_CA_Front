@@ -14,6 +14,9 @@ import {
     Row,
     Button,
 } from 'react-bootstrap'
+import {
+    withRouter
+} from 'react-router-dom'
 // import { PersianNumber } from '@thg303/react-persian';
 const vars = {
     title : 'جاب‌اونجا خوب است!',
@@ -163,8 +166,10 @@ class Home extends Component {
     }
     componentDidMount = () =>{
         Request.getReq(urls.projects).then((res) => {
-            // console.log(`second`, res)
-            if(res !== false){
+            console.log(`second`, res)
+            if(res === false)
+                this.props.history.push('/login')
+            else if(res.success !== false){
                 if (res.length !== undefined){
                     this.setState({
                         project: res,
@@ -178,19 +183,32 @@ class Home extends Component {
                     Toast.ErrorMessage(res.msg)
                 }
             }else{
-                Toast.ErrorMessage(vars.cantConnect)
+                console.log('ffdfddtirhi')
+                if(res.code === 403 || localStorage.getItem("token") === null){
+                    // Toast.ErrorMessage(res.msg)
+                    this.props.history.push('/login')
+                }else{
+                    Toast.ErrorMessage(vars.cantConnect)
+                }
             }
         })
         Request.getReq(urls.users).then((res) => {
             // console.log(`second`, res)
-            if(res !== false){
+            if (res === false)
+                this.props.history.push('/login')
+            else if(res.success !== false){
             this.setState({
                 user: res,
                 prevUsers : res,
                 isLoadU: true,
             })
             }else{
-                Toast.ErrorMessage(vars.cantConnect)
+                if (res.code === 403 || !localStorage.getItem("token")) {
+                    // Toast.ErrorMessage(res.msg)
+                    this.props.history.push('/login')
+                } else {
+                    Toast.ErrorMessage(vars.cantConnect)
+                }
             }
         })
     }
@@ -234,7 +252,7 @@ class Home extends Component {
         // console.log(this.state.user)
     }
     render(){
-    
+            
         if (this.state.isLoadP && this.state.isLoadU){
             // console.log(this.state.project.length)
             var projectsList,usersList
@@ -273,4 +291,4 @@ class Home extends Component {
     }
 }
 
-export default Home
+export default withRouter(Home)

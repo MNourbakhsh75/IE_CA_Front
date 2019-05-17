@@ -23,7 +23,7 @@ class UserCard extends Component {
         })
     }
     handleClick = (event) =>{
-        const id = this.props.user.id
+        const id = this.props.user.userName
         this.props.history.push('/user?id=' + id)
     }
     componentWillReceiveProps = (nextProps) => {

@@ -202,6 +202,7 @@ class login extends Component{
         console.log(res)
         if (res.success === true) {
             localStorage.setItem("token", res.token)
+            localStorage.setItem("loggedInUser", data.userName)
             console.log(localStorage)
             Toast.SuccessMessage(res.msg)
             this.props.history.push('/home')
@@ -211,6 +212,24 @@ class login extends Component{
       } else {
         Toast.ErrorMessage(vars.cantConnect)
       }
+    })
+  }
+  
+  
+  componentWillMount = () =>{
+    console.log('fffd')
+    Request.getReq('http://localhost:8084/joboonja/validtoken').then((res) => {
+      console.log(res)
+      if (res.success === true && localStorage.getItem("token")) {
+        this.props.history.push('/home')
+      } 
+      // else if (res.code === 403) {
+      //     Toast.ErrorMessage(res.msg)
+      //     // this.props.history.push('/home')
+      //   } 
+        // else {
+        //   Toast.ErrorMessage(vars.cantConnect)
+        // }
     })
   }
   render(){

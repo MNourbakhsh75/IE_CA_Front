@@ -24,7 +24,6 @@ const vars = {
     addSkillslabel : 'مهارت‌ها :',
     delSkillConfirm :'آیا مطمئن هستید؟'
 }
-const loggedInUserId = "1"
 
 class ProfileTitle extends Component{
     constructor(props){
@@ -121,7 +120,7 @@ class AddSkill extends Component{
         if (selectValue !== vars.selectSkill){
             var data = 'skillName=' + selectValue
             // console.log(selectValue)
-            Request.postReq(`http://localhost:8084/joboonja/user/${loggedInUserId}/skill`, data).then((res) => {
+            Request.postReq(`http://localhost:8084/joboonja/user/${localStorage.getItem("loggedInUser")}/skill`, data).then((res) => {
                 if(res !== false){
                     // console.log(res)
                     if (res.success === true){
@@ -208,7 +207,7 @@ class SkillBox extends Component {
     }
     sendDeleteReq = () =>{
         var data = '?skillName='+this.state.name
-        Request.deleteReq(`http://localhost:8084/joboonja/user/${loggedInUserId}/skill` + data).then((res) => {
+        Request.deleteReq(`http://localhost:8084/joboonja/user/${localStorage.getItem("loggedInUser")}/skill` + data).then((res) => {
             if (res !== false) {
                 if(res.success === true){
                     this.props.callBackFunc(this.state.name)
@@ -304,18 +303,25 @@ class user extends Component{
     // }
     componentDidMount = () =>{
         const values = queryString.parse(this.props.location.search)
-        // console.log(values.id)
+        // console.log(this.props)
         Request.getReq(vars.getUserUrl + values.id).then((res) => {
-            // console.log(res)
-            if (res !== false) {
+            console.log(res)
+            if (res === false)
+                this.props.history.push('/login')
+            else if (res.success !== false) {
                 this.setState({
                     user: res.user,
                     isLoadU: true,
-                    otherUser : (res.user.id === loggedInUserId) ? false : true,
+                    otherUser : (res.user.userName === localStorage.getItem("loggedInUser")) ? false : true,
                     endorsedArray : res.endorse
                 })
             } else {
-                Toast.ErrorMessage(vars.cantConnect)
+                if (res.code === 403) {
+                    Toast.ErrorMessage(res.msg)
+                    this.props.history.push('/login')
+                } else {
+                    Toast.ErrorMessage(vars.cantConnect)
+                }
             }
         })
         Request.getReq(vars.getAllSkillsUrl).then((res) => {
@@ -335,7 +341,7 @@ class user extends Component{
         for (var s in skills){
             // console.log(skills[s])
             // if(this.state.otherUser)
-            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack} otherCallBackFunc={this.endorseSkillCallBack} otherUser={this.state.otherUser} userId={this.state.user.id} endorsedArray={this.state.endorsedArray}/>
+            var comp = <SkillBox key={s} name={skills[s].name} point={skills[s].point} callBackFunc={this.delSkillCallBack} otherCallBackFunc={this.endorseSkillCallBack} otherUser={this.state.otherUser} userId={this.state.user.userName} endorsedArray={this.state.endorsedArray}/>
             list.push(comp)
         }
         return list

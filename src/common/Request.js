@@ -55,6 +55,8 @@ export const deleteReq = async (url) => {
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     }
+    if (localStorage.getItem("token"))
+        headers["token"] = localStorage.getItem("token");
     return fetch(url, {
             method: 'DELETE',
             headers,
@@ -77,6 +79,8 @@ export const putReq = async (url, data) => {
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     }
+    if (localStorage.getItem("token"))
+        headers["token"] = localStorage.getItem("token");
     return fetch(url, {
             method: 'PUT',
             // mode : 'CORS',

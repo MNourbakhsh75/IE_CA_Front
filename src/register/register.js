@@ -281,6 +281,21 @@ class RegBox extends Component {
 }
 class register extends Component{
 
+  componentWillMount = () => {
+    Request.getReq('http://localhost:8084/joboonja/validtoken').then((res) => {
+      console.log(res)
+      if (res.success === true && localStorage.getItem("token")) {
+        this.props.history.push('/home')
+      }
+      // else if (res.code === 403) {
+      //     Toast.ErrorMessage(res.msg)
+      //     // this.props.history.push('/home')
+      //   } 
+      // else {
+      //   Toast.ErrorMessage(vars.cantConnect)
+      // }
+    })
+  }
   render(){
     return(
       <div className="register">
