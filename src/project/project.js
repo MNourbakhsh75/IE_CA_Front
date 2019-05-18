@@ -30,7 +30,7 @@ const vars = {
 const urls = {
     getProject : 'http://localhost:8084/joboonja/project/'
 }
-const loggedInUserId = "1"
+
 class SkillBox extends Component {
     constructor(props){
         super(props)
@@ -149,15 +149,33 @@ class ProjectContainer extends Component {
         this.state = {
             project : '',
             remainTime: '',
-            canBid : true
+            canBid : true,
+            winnerdisp : false,
+            winnerName : ''
         }
     }
     componentWillMount = ()=>{
         this.setState({
             project: this.props.project,
             remainTime: UTL.cmpDate(this.props.project.deadline),
-            canBid : this.checkForBidingUser(this.props.project.bids)
+            canBid : this.checkForBidingUser(this.props.project.bids),
+            winnerdisp : this.checkForWinner(this.props.project.winner),
+            winnerName: this.setWinnerName(this.props.project.winner)
         })
+    }
+    checkForWinner = (winner)=> {
+        if (winner !== null && winner !== undefined) {
+            return true
+        }else{
+            return false
+        }
+    }
+    setWinnerName = (winner)=>{
+        if(winner !== null && winner !== undefined){
+            return (this.props.project.winner.firstName + ' '+ this.props.project.winner.lastName)
+        }else{
+            return ''
+        }
     }
     componentDidMount = ()=>{
         this.interval = setInterval(()=>{
@@ -195,7 +213,7 @@ class ProjectContainer extends Component {
     }
     checkForBidingUser = (bids)=>{
         for(var b in bids){
-            if(bids[b].bidingUser.id === loggedInUserId){
+            if (bids[b].bidingUser.userName === localStorage.getItem("loggedInUser")) {
                 return false
             }
         }
@@ -256,10 +274,10 @@ class ProjectContainer extends Component {
                                 {vars.unit}
                             </span>
                         </Row>
-                        <Row className="winner" hidden>
+                        <Row className="winner" style={{display: this.state.winnerdisp ? '' : 'none',color:'#008e3d'}}>
                             <span className="flaticon-check-mark"></span>
                             <span className="text">
-                                
+                                {this.state.winnerName}
                             </span>
                         </Row>
                         <Row className="desc">{vars.desc}</Row>
@@ -298,7 +316,7 @@ class project extends Component {
         const values = queryString.parse(this.props.location.search)
         // console.log(values.id)
         Request.getReq(urls.getProject+values.id).then((res) => {
-            // console.log(`second`, res)
+            console.log(`second`, res)
             if (res === false)
                 this.props.history.push('/login')
             else if(res.success !== false){

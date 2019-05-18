@@ -122,9 +122,9 @@ class UserSearch extends Component{
     handelChange = (event) => {
         console.log(event.target.value)
         Request.getReq(urls.searchUser + '?q=' + event.target.value).then((res) => {
-            // console.log(`second`, res)
             if (res !== false) {
                 if (res.length !== undefined) {
+                    console.log(`second`, res)
                     this.props.callBackFunc(res)
                     // this.setState({
                     //     project: res,

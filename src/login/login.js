@@ -8,7 +8,7 @@ import {
   Col,
   Button
 } from 'react-bootstrap'
-import logo from '../assets/logo/logo v2.png'
+import logo from '../assets/logo/logo v1.png'
 import * as Toast from '../common/Toast'
 import * as Request from '../common/Request'
 import classnames from 'classnames';
@@ -188,6 +188,14 @@ class login extends Component{
     };
   }
   handleSubmit = (event) =>{
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      this.setState({
+        validated: true
+      });
     event.preventDefault();
     let sendingData = new URLSearchParams();
     let data = {}
@@ -233,6 +241,7 @@ class login extends Component{
     })
   }
   render(){
+    const { validated } = this.state;
     return(
       <div className="login">
         <div className="content">
@@ -248,6 +257,8 @@ class login extends Component{
               <div className="form-row" >
                 <div className="form-div">
           <Form
+          noValidate
+            validated={validated}
           onSubmit={this.handleSubmit}>
             <Form.Group as={Row}  controlId="validationUsername">
               <Form.Label  column sm = {3}>نام کاربری</Form.Label>
