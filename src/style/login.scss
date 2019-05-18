@@ -48,13 +48,15 @@
             display: inline-flex;
             width: 100%;
             a{
-              width: 100%;
+              width: 90%;
+              margin-top: 20px;
             }
             .form-div{
               margin-top: 20px;
               text-align: right;
               color:#8b8f70;
               margin-right:15px;
+              width: 90%;
               fieldset
               {
                 text-align: center;
@@ -105,7 +107,9 @@
             margin:5px 0;
             .btn
             {
-              width: 42%;
+              position: relative;
+              right: 40%;
+              width: 50%;
               color: white;
               text-align: center;
               background-color: #1BA6B2;
@@ -129,6 +133,27 @@
             }
 
           }
+          a{
+            width: 90%;
+          .btn-reg {
+            // .btn{
+              position: relative;
+              right: 15%;
+              width: 48%;
+              color: white;
+              text-align: center;
+              background-color: #1BA6B2;
+              border-radius: 3px;
+              border : none;
+              font-family: inherit;
+              height: inherit;
+              cursor: pointer;
+              font-size: inherit;
+              margin-bottom: -5px;
+              font-size: 15px;
+            // }
+          }
+        }
         }
       }
     }

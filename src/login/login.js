@@ -169,7 +169,12 @@ class RegBox extends Component {
           </Form>
         </div>
                 {/* <ButtonMake text="ورود" /> */}
-                <a href="../register"><ButtonMake text="ثبت نام" styleName="bnt-border"/></a>
+                <a href="../register">
+                <Button className="btn-reg" variant = "primary"
+                  type = "submit" >
+                  ثبت نام
+                </Button>
+                </a>
               </div>
             </div>
           </Jumbotron>
@@ -294,7 +299,12 @@ class login extends Component{
           </Form>
         </div>
                 {/* <ButtonMake text="ورود" /> */}
-                <a href="../register"><ButtonMake text="ثبت نام" styleName="bnt-border"/></a>
+                <a href="../register">
+                <Button className="btn-reg" variant = "primary"
+                  >
+                  ثبت نام
+                </Button>
+                </a>
               </div>
             </div>
           </Jumbotron>
