@@ -21,6 +21,7 @@ const vars = {
   UserSearch: 'جست‌وجوی نام کاربر',
   cantConnect: 'خطا در برقراری ارتباط با سرور'
 }
+ // eslint-disable-next-line
 class InputBlock extends Component{
   render()
   {
@@ -39,6 +40,7 @@ class InputBlock extends Component{
     );
   }
 }
+ // eslint-disable-next-line
 class FormBox extends Component {
     constructor(...args) {
       super(...args);
@@ -106,16 +108,7 @@ class FormBox extends Component {
         jobTitle: event.target.title.value,
         profilePictureURL: event.target.image.value
       }
-      let dd = {}
-      dd = {
-        firstName: 'ژان',
-        lastName: 'ژاک روسو',
-        userName: 'jjrs',
-        password: '123456789',
-        bio: 'آقا ژان ژاک روسو می‌گه عید بسیار زیباست😊😊',
-        jobTitle: 'برنامه نویس وب',
-        profilePictureURL: 'https://upload.wikimedia.org/wikipedia/en/4/4c/Maurice_Quentin_de_La_Tour_-_Portrait_of_Jean-Jacques_Rousseau_-_adjusted.jpg'
-      }
+      
       sendingData.append('data', JSON.stringify(data));
       Request.postReq(`http://localhost:8084/joboonja/register`, sendingData).then((res) => {
         if (res !== false) {
@@ -449,16 +442,7 @@ class register extends Component{
       jobTitle: event.target.title.value,
       profilePictureURL: event.target.image.value
     }
-    let dd = {}
-    dd = {
-      firstName: 'ژان',
-      lastName: 'ژاک روسو',
-      userName: 'jjrs',
-      password: '123456789',
-      bio: 'آقا ژان ژاک روسو می‌گه عید بسیار زیباست😊😊',
-      jobTitle: 'برنامه نویس وب',
-      profilePictureURL: 'https://upload.wikimedia.org/wikipedia/en/4/4c/Maurice_Quentin_de_La_Tour_-_Portrait_of_Jean-Jacques_Rousseau_-_adjusted.jpg'
-    }
+    
     sendingData.append('data', JSON.stringify(data));
     Request.postReq(`http://localhost:8084/joboonja/register`, sendingData).then((res) => {
       if (res !== false) {
