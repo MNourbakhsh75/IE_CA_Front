@@ -1,2 +1,14 @@
+#front
 docker build . -t ie-react
 docker run -p 3000:80 ie-react
+
+#mysql
+docker run -d -e MYSQL_ROOT_PASSWORD=root -e --name mysql-database mysql:latest
+go to mysql and create database
+
+#server
+docker build . -t ie-java
+ docker run -p 8084:8080 --name server-cont --link mysql-database:mysql ie-java
+
+#remove
+ docker rm --force 8015c8d7b83c or name
