@@ -12,3 +12,10 @@ docker build . -t ie-java
 
 #remove
  docker rm --force 8015c8d7b83c or name
+
+
+ #name
+ if name == "boring_wozniak" /* Steve Wozniak is not boring */ {
+  goto begin
+}
+https://frightanic.com/goodies_content/docker-names.php
