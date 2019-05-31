@@ -120,7 +120,7 @@ class AddSkill extends Component{
         if (selectValue !== vars.selectSkill){
             var data = 'skillName=' + selectValue
             // console.log(selectValue)
-            Request.postReq(`http://localhost:8084/joboonja/user/${localStorage.getItem("loggedInUser")}/skill`, data).then((res) => {
+            Request.postReq(`http://localhost:8084/joboonja/user/skill?id=${localStorage.getItem("loggedInUser")}`, data).then((res) => {
                 if(res !== false){
                     // console.log(res)
                     if (res.success === true){
@@ -206,8 +206,8 @@ class SkillBox extends Component {
             this.setState({pointText: false})
     }
     sendDeleteReq = () =>{
-        var data = '?skillName='+this.state.name
-        Request.deleteReq(`http://localhost:8084/joboonja/user/${localStorage.getItem("loggedInUser")}/skill` + data).then((res) => {
+        var data = 'skillName=' + this.state.name
+        Request.deleteReq(`http://localhost:8084/joboonja/user/skill?id=${localStorage.getItem("loggedInUser")}&${data}`).then((res) => {
             if (res !== false) {
                 if(res.success === true){
                     this.props.callBackFunc(this.state.name)
@@ -236,8 +236,9 @@ class SkillBox extends Component {
         });
     }
     otherHandleClick = (e) =>{
-        const data = '?skillName=' + this.state.name
-        Request.putReq(`http://localhost:8084/joboonja/user/${this.state.userId}/skill`+ data).then((res) => {
+        const data = 'skillName=' + this.state.name
+        Request.putReq(`http://localhost:8084/joboonja/user/skill?id=${this.props.userId}&${data}`).then((res) => {
+            console.log(res)
             if (res !== false) {
                 if (res.success === true) {
                     // console.log(res)
@@ -303,8 +304,9 @@ class user extends Component{
     // }
     componentDidMount = () =>{
         const values = queryString.parse(this.props.location.search)
-        // console.log(this.props)
-        Request.getReq(vars.getUserUrl + values.id).then((res) => {
+        console.log(values.id)
+        console.log(vars.getUserUrl + '?id=' + values.id)
+        Request.getReq(vars.getUserUrl + '?id=' + values.id).then((res) => {
             console.log(res)
             if (res === false)
                 this.props.history.push('/login')

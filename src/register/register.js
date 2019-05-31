@@ -462,7 +462,7 @@ class register extends Component{
     Request.getReq('http://localhost:8084/joboonja/validtoken').then((res) => {
       console.log(res)
       if (res.success === true && localStorage.getItem("token")) {
-        this.props.history.push('/home')
+        this.props.history.push('/')
       }
       // else if (res.code === 403) {
       //     Toast.ErrorMessage(res.msg)

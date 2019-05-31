@@ -28,7 +28,7 @@ const vars = {
 const urls = {
     projects : 'http://localhost:8084/joboonja/project',
     users : 'http://localhost:8084/joboonja/user',
-    searchUser: 'http://localhost:8084/joboonja/user/search',
+    searchUser: 'http://localhost:8084/joboonja/search/user',
     searchProject: 'http://localhost:8084/joboonja/search/project'
 }
 class Title extends Component{

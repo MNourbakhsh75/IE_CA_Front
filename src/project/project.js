@@ -83,7 +83,7 @@ class Bid extends Component {
     sendBidData = (event) => {
         // console.log(this.state.financialGoal)
         var data = 'amount=' + this.state.financialGoal
-        Request.postReq(`http://localhost:8084/joboonja/project/${this.state.projectId}/bid`, data).then((res) => {
+        Request.postReq(`http://localhost:8084/joboonja/project/bid?id=${this.state.projectId}`, data).then((res) => {
             // console.log(res)
             if (res !== false) {
                 if (res.success === true) {
@@ -315,7 +315,7 @@ class project extends Component {
     componentDidMount = () =>{
         const values = queryString.parse(this.props.location.search)
         // console.log(values.id)
-        Request.getReq(urls.getProject+values.id).then((res) => {
+        Request.getReq(urls.getProject+ '?id=' + values.id).then((res) => {
             console.log(`second`, res)
             if (res === false)
                 this.props.history.push('/login')

@@ -75,7 +75,7 @@ export const deleteReq = async (url) => {
             return false
         });
 }
-export const putReq = async (url, data) => {
+export const putReq = async (url) => {
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     }
@@ -85,7 +85,6 @@ export const putReq = async (url, data) => {
             method: 'PUT',
             // mode : 'CORS',
             headers,
-            body: data,
         })
         .then(response => {
             return new Promise((resolve, reject) => {
