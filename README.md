@@ -1,68 +1,75 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div id="top"></div>
 
-## Available Scripts
 
-In the project directory, you can run:
+<br />
+<div align="center">
+  <a href="https://github.com/MNourbakhsh75/ie_react">
+    <img src="src/assets/logo/home-page.png" alt="Logo" width="600" height="450">
+  </a>
 
-### `npm start`
+  <h3 align="center">JobOonja!</h3>
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  <p align="center">
+    Internet Engineering Course Project - Spring 2019 - University of Tehran
+    
+</div>
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#built-with">Built With</a>
+    </li>
+    <li><a href="#useful-links">Useful Links</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+JobOonja functions as a job-matching platform similar to <a href="https://jooble.org/">Jooble</a> and <a href="https://jobinja.ir/">Jobinja</a>. Employing an auction-based approach, it matches projects to users. Each project in the system specifies the necessary skills and the maximum payment value. Users possessing varying skill levels bid for projects, and ultimately, the system selects the most suitable user for each project.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The project encompassed various phases. The first phase entailed designing and implementing the program logic and back end using <a hre="https://www.tutorialspoint.com/design_pattern/mvc_pattern.htm">MVC design pattern</a>. The second phase involved crafting the front end design using React. A database for data storage with JPA was also designed, and mechanisms such as JWT, Docker, and Kubernetes were employed.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The front end section of the project resides in this repository, containing all the codes, including the HTML, CSS, and JS files. The back end of the project can also be found in <a href="https://github.com/MNourbakhsh75/IE_CA">this repository</a>.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Built With
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The programming language, frameworks, and technologies used in the project are listed here:
 
-## Learn More
+* [Javascript](https://www.javascript.com/)
+* [React](https://react.dev/)
+* [Json](https://www.json.org/json-en.html)
+* [Sass](https://sass-lang.com/)
+* [Bootstrap](https://getbootstrap.com/)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
+## Useful Links
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Some useful links and tutorials about this project can be found in <a href="https://github.com/NegarMirgati/JobInja/tree/master#useful-tutorials">this repository</a>
 
-### Advanced Configuration
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-### Deployment
+<!-- CONTACT -->
+## Contact
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Mehrdad Nourbakhsh - mehrdad.nb4@gmail.com
 
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+<p align="right">(<a href="#top">back to top</a>)</p>
